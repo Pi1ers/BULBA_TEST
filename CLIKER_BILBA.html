@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Игра с шкалой энергии и числом</title>
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    height: 100vh;
+    overflow: hidden;
+    font-family: sans-serif;
+    position: relative;
+  }
+
+#energy-bar {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px; /* или уменьшите, если хотите меньше */
+  height: 40px; /* или подберите под свою иконку и текст */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* содержимое слева */
+  font-size: 220px;
+  color: #fff;
+  gap: 8px; /* чтобы расстояние между иконкой и цифрой было */
+}
+
+
+
+
+  /* Область с элементами монеты и счетчиком */
+  #coin-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  #counter {
+    margin-bottom: 50px;
+    font-size: 24px;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  #coin {
+    width: 300px;
+    height: 300px;
+    background: url('https://raw.githubusercontent.com/Pi1ers/TESTGAME/main/BULBA_COIN-removebg-preview.png') no-repeat center/cover;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 5px gold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Анимация для +1 */
+  .plusone {
+    position: absolute;
+    font-size: 24px;
+    color: yellow;
+    font-weight: bold;
+    pointer-events: none;
+    animation: rise 1s ease-out forwards;
+    z-index: 9999;
+  }
+
+  @keyframes rise {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+  }
+
+  /* Медиазапрос для мобильных устройств */
+  @media (max-width: 768px) {
+    #counter {
+      font-size: 36px;
+    }
+    #energy-bar {
+      font-size: 24px;
+      padding: 10px;
+      width: auto;
+      min-width: 250px;
+    }
+
+
+
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Шкала энергии с числом -->
+<div id="energy-bar">
+   ⚡:  <span id="energy-count"> 100</span>
+</div>
+
+<!-- Контейнер с счетчиком и монетой -->
+<div id="coin-container">
+  <div id="counter"> 0</div>
+  <div id="coin"></div>
+</div>
+
+<script>
+  let count = 0;
+  const counterElement = document.getElementById('counter');
+  const energyCountElement = document.getElementById('energy-count');
+
+  let energy = 100; // Изначально энергия 100
+  const maxEnergy = 100;
+
+  // Обновляем отображение энергии
+  function updateEnergy() {
+    energyCountElement.textContent = energy;
+  }
+
+  // Восстановление энергии каждые 3 секунды
+  setInterval(() => {
+    if (energy < maxEnergy) {
+      energy++;
+      updateEnergy();
+    }
+  }, 3000);
+
+  function handleClick(clientX, clientY) {
+    if (energy <= 0) {
+      alert('Нет энергии! Подождите или восстановите её.');
+      return;
+    }
+
+    energy--; // Уменьшаем энергию на 1
+    updateEnergy();
+
+    // Получаем координаты монеты
+    const coinRect = document.getElementById('coin').getBoundingClientRect();
+
+    // Создаем +1 с позиционированием
+    const plusOne = document.createElement('div');
+    plusOne.className = 'plusone';
+    plusOne.textContent = '+1';
+
+    // Расчет глобальных координат клика
+    plusOne.style.left = `${clientX}px`;
+    plusOne.style.top = `${clientY}px`;
+    document.body.appendChild(plusOne);
+
+    // Удаляем элемент после анимации
+    plusOne.addEventListener('animationend', () => {
+      plusOne.remove();
+    });
+
+    // Обновление счетчика
+    count++;
+    counterElement.textContent =  count;
+  }
+
+  // Обработка клика
+  document.getElementById('coin-container').addEventListener('click', (e) => {
+    handleClick(e.clientX, e.clientY);
+  });
+
+  // Обработка касания для мобильных
+  document.getElementById('coin-container').addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    handleClick(touch.clientX, touch.clientY);
+    e.preventDefault();
+  }, { passive: false });
+
+  // Инициализация
+  updateEnergy();
+
+  function adjustScale() {
+  const width = window.innerWidth;
+  const baseSize = 300; // исходный размер монеты
+  let scaleFactor = 1;
+
+  if (width < 768) {
+    scaleFactor = 1.5; // для мобильных устройств
+  } else if (width >= 768 && width < 1200) {
+    scaleFactor = 1.2;
+  } else {
+    scaleFactor = 1;
+  }
+
+  // Меняем размер контейнера #coin
+  const coin = document.getElementById('coin');
+  coin.style.width = (baseSize * scaleFactor) + 'px';
+  coin.style.height = (baseSize * scaleFactor) + 'px';
+
+  // Можно дополнительно менять размер шрифта и позиции элемента, если нужно
+  document.getElementById('counter').style.fontSize = (24 * scaleFactor) + 'px';
+}
+
+</script>
+
+</body>
+</html>

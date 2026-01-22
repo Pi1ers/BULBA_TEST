@@ -30,8 +30,6 @@
     margin-bottom: 20px;
   }
 
-  
-  
   #coin {
     width: 45vw; /* Размер зависит от ширины окна */
     height: 45vw;
@@ -51,7 +49,6 @@
 <div id="score">0</div>
 <div id="coin"></div>
 <div id="energy">Энергия: 100</div>
-</div>
 
 <script>
   let clickCount = 0;
@@ -60,7 +57,55 @@
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
-  
+
+  // Получаем user_id из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const userId = urlParams.get('user_id');
+
+  // Адрес API для загрузки прогресса
+  const apiBaseUrl = 'http://127.0.0.1:8000'; // Измените, если нужно (например, если сервер работает на другом домене)
+
+  // Функция для загрузки прогресса
+  async function loadProgress() {
+    if (!userId) {
+      console.warn('User ID не найден в URL');
+      return;
+    }
+    try {
+      const response = await fetch(`${apiBaseUrl}/load_progress?user_id=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.score !== undefined && data.energy !== undefined) {
+          clickCount = data.score;
+          energy = data.energy;
+          scoreElem.textContent = `Нажития: ${clickCount}`;
+          energyElem.textContent = `Энергия: ${energy}`;
+        }
+      } else {
+        console.warn('Не удалось загрузить прогресс, ответ:', response.status);
+      }
+    } catch (err) {
+      console.error('Ошибка при загрузке прогресса:', err);
+    }
+  }
+
+  // Функция для сохранения прогресса
+  async function saveProgress() {
+    if (!userId) return;
+    try {
+      await fetch(`${apiBaseUrl}/save_progress`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          user_id: userId,
+          score: clickCount,
+          energy: energy
+        })
+      });
+    } catch (err) {
+      console.error('Ошибка при сохранении прогресса:', err);
+    }
+  }
 
   // Функция анимации нажатия
   function animatePress() {
@@ -77,34 +122,25 @@
       energy--;
       scoreElem.textContent = `Нажития: ${clickCount}`;
       energyElem.textContent = `Энергия: ${energy}`;
+      
+      // Сохраняем прогресс после каждого нажатия
+      saveProgress();
     } else {
-      alert('Энергия закончилась!'); // или можно просто отключить кнопку
+      alert('Энергия закончилась!');
     }
   }
 
-  
+  // Загружаем прогресс при старте
+  loadProgress();
 
-  // Для мобильных устройств: touchstart
+  // Обработчики для мобильных и десктопных устройств
   coin.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // предотвратить эмуляцию мыши
+    e.preventDefault();
     handlePress();
   }, {passive: false});
 
-  // Для десктопа: click
   coin.addEventListener('click', handlePress);
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-

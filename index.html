@@ -54,15 +54,35 @@
 </div>
 
 <script>
-  let clickCount = 0;
-  let energy = 100; // изначально 100
+  let clickCount = 0; // общее число нажатий
+  let energy = 100; // энергия
+  let level = 1; // текущий уровень
+  const hitsPerLevel = 10; // нажаний на уровень
 
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
-  
 
-  // Функция анимации нажатия
+  // изображения для уровней
+  const coinImages = [
+    'https://https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/TREE-BULBA.png', // Уровень 1
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/STONE-COIN.png', // Уровень 2
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/CLAY-COIN.png', // Уровень 3
+    // добавьте свои изображения для дальнейших уровней
+  ];
+
+  function updateCoinImage() {
+    const imageIndex = Math.min(level - 1, coinImages.length - 1);
+    coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
+  }
+
+  // Обновляем уровень по общему количеству нажатий
+  function updateLevel() {
+    level = Math.floor(clickCount / hitsPerLevel) + 1;
+    updateCoinImage();
+  }
+
+  // Анимация
   function animatePress() {
     coin.style.transform = 'scale(0.85)';
     setTimeout(() => {
@@ -77,25 +97,28 @@
       energy--;
       scoreElem.textContent = `Нажития: ${clickCount}`;
       energyElem.textContent = `Энергия: ${energy}`;
+
+      // Обновляем уровень при необходимости
+      updateLevel();
     } else {
-      alert('Энергия закончилась!'); // или можно просто отключить кнопку
+      alert('Энергия закончилась!');
     }
   }
 
-  
+  // Изначально
+  updateCoinImage();
 
-  // Для мобильных устройств: touchstart
+  // Слушатели
   coin.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // предотвратить эмуляцию мыши
+    e.preventDefault();
     handlePress();
   }, {passive: false});
-
-  // Для десктопа: click
   coin.addEventListener('click', handlePress);
 </script>
 
 </body>
 </html>
+
 
 
 

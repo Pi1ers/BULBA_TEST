@@ -35,7 +35,7 @@
 </head>
 <body>
 
-<div id="score">Нажития: 0</div>
+<div id="score">0</div>
 <div id="coin"></div>
 
 <script>
@@ -56,7 +56,7 @@
   function handlePress() {
     animatePress();
     clickCount++;
-    scoreElem.textContent = `Нажития: ${clickCount}`;
+    scoreElem.textContent = `${clickCount}`;
   }
 
   // Для мобильных устройств: touchstart
@@ -71,4 +71,5 @@
 
 </body>
 </html>
+
 

@@ -71,7 +71,7 @@
     // добавьте свои изображения для дальнейших уровней
   ];
 
-    // сообщения для каждого уровня
+  // сообщения для каждого уровня
   const congratulationsMessages = [
     "Вы достигли уровня 1! Отличная работа!",
     "Поздравляю! Вы достигли уровня 2!",
@@ -79,13 +79,13 @@
     "Вы настоящий эксперт! Уровень 4 достигнут!",
     // добавьте свои сообщения по мере роста уровней
   ];
-  
+
   function updateCoinImage() {
     const imageIndex = Math.min(level - 1, coinImages.length - 1);
     coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
   }
 
-   // Обновляем уровень и показываем сообщение при повышении
+  // Обновляем уровень и показываем сообщение при повышении
   function updateLevel() {
     const newLevel = Math.floor(clickCount / hitsPerLevel) + 1;
     if (newLevel > level) {
@@ -95,12 +95,6 @@
       alert(message);
       updateCoinImage();
     }
-  }
-
-    // Обновляем уровень по общему количеству нажатий
-  function updateLevel() {
-    level = Math.floor(clickCount / hitsPerLevel) + 1;
-    updateCoinImage();
   }
 
   // Анимация
@@ -119,7 +113,7 @@
       scoreElem.textContent = `Нажития: ${clickCount}`;
       energyElem.textContent = `Энергия: ${energy}`;
 
-      // Обновляем уровень при необходимости
+      // Проверка уровня
       updateLevel();
     } else {
       alert('Энергия закончилась!');
@@ -129,7 +123,7 @@
   // Изначально
   updateCoinImage();
 
-  // Слушатели
+  // Обработчики
   coin.addEventListener('touchstart', (e) => {
     e.preventDefault();
     handlePress();
@@ -139,6 +133,7 @@
 
 </body>
 </html>
+
 
 
 

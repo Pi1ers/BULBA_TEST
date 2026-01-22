@@ -22,6 +22,12 @@
     margin-bottom: 20px;
   }
 
+  #energy {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+  }
+
+  
   #coin {
     width: 45vw; /* Размер зависит от ширины окна */
     height: 45vw;
@@ -40,12 +46,15 @@
 
 <div id="score">0</div>
 <div id="coin"></div>
+<div id="energy">Энергия: 100</div>
 
 <script>
   let clickCount = 0;
+  let energy = 100; // изначально 100
 
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
+  const energyElem = document.getElementById('energy');
 
   // Функция анимации нажатия
   function animatePress() {
@@ -53,6 +62,18 @@
     setTimeout(() => {
       coin.style.transform = 'scale(1)';
     }, 100);
+  }
+
+  function handlePress() {
+    if (energy > 0) {
+      animatePress();
+      clickCount++;
+      energy--;
+      scoreElem.textContent = `Нажития: ${clickCount}`;
+      energyElem.textContent = `Энергия: ${energy}`;
+    } else {
+      alert('Энергия закончилась!'); // или можно просто отключить кнопку
+    }
   }
 
   // Обработчик для всего
@@ -74,6 +95,7 @@
 
 </body>
 </html>
+
 
 
 

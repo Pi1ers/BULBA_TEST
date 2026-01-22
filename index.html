@@ -2,111 +2,293 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
-<title>Монета с Анимацией</title>
+<title>Игра с шкалой энергии и числом</title>
 <style>
   body {
     margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background: linear-gradient(135deg, black, #2a5298);
+    height: 100vh;
+    overflow: hidden;
+    font-family: sans-serif;
+    position: relative;
+  }
+
+  /* Шкала энергии */
+  #energy-bar {
+    position: fixed;
+    bottom: 55px;
+    left: 5px;
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    color: #fff;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  /* Контейнер с счетчиком и монетой */
+  #coin-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
+    cursor: pointer;
+    user-select: none;
+    z-index: 10;
+  }
+
+  #counter {
+    margin-bottom: 50px;
+    font-size: 24px;
     color: #fff;
-  }
-
-  #score {
-    font-size: 2em;
-    margin-bottom: 20px;
-  }
-
-  #energy {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    font-size: 1.5em;
+    font-weight: bold;
+    transition: font-size 0.3s;
   }
 
   #coin {
-    width: 45vw; /* Размер зависит от ширины окна */
-    height: 45vw;
-    max-width: 300px; /* максимум размера */
-    max-height: 300px;
-    min-width: 150px; /* минимум размера */
-    min-height: 150px;
-    background-image: url('https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/BULBA_COIN-removebg-preview.png');
-    background-size: cover;
+    width: 150px;
+    height: 150px;
+    background: url('https://raw.githubusercontent.com/Pi1ers/TESTGAME/refs/heads/main/BULBA_COIN-removebg-preview.png') no-repeat center/cover;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 5px gold;
+    transition: width 0.2s, height 0.5s;
+  }
+
+  /* +1 анимация */
+  .plusone {
+    position: absolute;
+    font-size: 24px;
+    color: yellow;
+    font-weight: bold;
+    pointer-events: none;
+    z-index: 9999;
+    animation: rise 1s ease-out forwards;
+  }
+
+  @keyframes rise {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.5); }
+  }
+
+  /* Адаптивность */
+  @media (max-width: 768px) {
+    #counter {
+      font-size: 20px;
+    }
+    #energy-bar {
+      font-size: 16px;
+      padding: 10px;
+      min-width: 250px;
+    }
+    #coin {
+      width: 200px;
+      height: 200px;
+    }
+  }
+
+  /* Контейнер с кнопками внизу */
+  #bottom-buttons {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; /* равное пространство между кнопками */
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 10px 0;
+    z-index: 10;
+  }
+
+  /* Стиль кнопок */
+  #bottom-buttons button {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #ffffff77; /* прозрачный белый */
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: background-color 0.2s;
+  }
+
+  #bottom-buttons button:hover {
+    background-color: #fff;
   }
 </style>
 </head>
 <body>
+<!-- Блок с названием и прогрессом -->
+  <div id="level-info" style="position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.6); padding: 10px; border-radius: 8px; cursor: pointer; z-index: 20;">
+    <div id="level-name" style="font-weight: bold; color: #fff;">Уровень: 1</div>
+    <div style="width: 150px; height: 10px; background: #555; border-radius: 5px; margin-top: 5px; overflow: hidden;">
+      <div id="level-progress" style="width: 50%; height: 100%; background: #0f0;"></div>
+    </div>
+  </div>
 
-<div id="score">0</div>
-<div id="coin"></div>
-<div id="energy">Энергия: 100</div>
+  <!-- Меню уровня, скрыто по умолчанию -->
+  <div id="level-menu" style="position: fixed; top: 50px; left: 10px; width: 250px; background: rgba(0,0,0,0.8); color: #fff; padding: 15px; border-radius: 8px; display: none; z-index: 30;">
+    <h3>Информация об уровне</h3>
+    <p>Текущий уровень: <span id="current-level">1</span></p>
+    <p>Прогресс: <span id="current-progress">50%</span></p>
+    <h4>Другие уровни:</h4>
+    <ul id="levels-list">
+      <li>Уровень 2</li>
+      <li>Уровень 3</li>
+      <li>Уровень 4</li>
+    </ul>
+  </div>
 
-<!-- вставьте критический скрипт -->
+
+<!-- Шкала энергии -->
+<div id="energy-bar">
+  ⚡: <span id="energy-count">100</span>
+</div>
+
+<!-- Контейнер с счетчиком и монетой в центре -->
+<div id="coin-container">
+  <div id="counter">0</div>
+  <div id="coin"></div>
+</div>
+
+<!-- Кнопки внизу -->
+<div id="bottom-buttons">
+  <button>Гастроном</button>
+  <button>Задания</button>
+  <button>ДРУЗЬЯ</button>
+  <button>AirDrop</button>
+</div>
+
 <script>
-  // Инициализация
-  let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
-  let energy = parseInt(localStorage.getItem('energy')) || 100;
 
-  const scoreElem = document.getElementById('score');
-  const energyElem = document.getElementById('energy');
+  // Начальные параметры уровня
+let currentLevel = 1;
+let levelProgress = 50; // в процентах, от 0 до 100
+
+const levelNameElem = document.getElementById('level-name');
+const levelProgressElem = document.getElementById('level-progress');
+const currentLevelSpan = document.getElementById('current-level');
+const currentProgressSpan = document.getElementById('current-progress');
+const levelMenu = document.getElementById('level-menu');
+const levelInfoDiv = document.getElementById('level-info');
+
+// Обновление отображения уровня
+function updateLevelDisplay() {
+  document.getElementById('current-level').textContent = currentLevel;
+  document.getElementById('current-progress').textContent = levelProgress + '%';
+  levelNameElem.textContent = `Уровень: ${currentLevel}`;
+  levelProgressElem.style.width = levelProgress + '%';
+}
+
+// Переключение отображения меню
+levelInfoDiv.addEventListener('click', () => {
+  if (levelMenu.style.display === 'none') {
+    levelMenu.style.display = 'block';
+  } else {
+    levelMenu.style.display = 'none';
+  }
+});
+
+// Можно дополнительно добавить функции для изменения уровня или прогресса по мере необходимости
+
+// Инициализация
+updateLevelDisplay();
+
+  let count = 0;
+  const counterElement = document.getElementById('counter');
+  const energyCountElement = document.getElementById('energy-count');
   const coin = document.getElementById('coin');
 
-  // Обновление интерфейса
-  scoreElem.textContent = `Нажития: ${clickCount}`;
-  energyElem.textContent = `Энергия: ${energy}`;
+  let energy = 100;
+  const maxEnergy = 100;
 
-  function animatePress() {
-    coin.style.transform = 'scale(0.8)';
-    setTimeout(() => {
-      coin.style.transform = 'scale(1)';
-    }, 100);
+  // Обновление энергии
+  function updateEnergy() {
+    energyCountElement.textContent = energy;
   }
 
-  function sendProgress() {
-    const progressData = {
-      user_id: new URLSearchParams(window.location.search).get('user_id'),
-      score: clickCount,
-      energy: energy
-    };
-    if (window.Telegram && Telegram.WebApp) {
-      Telegram.WebApp.sendData(JSON.stringify(progressData));
+  // Восстановление энергии каждые 3 сек
+  setInterval(() => {
+    if (energy < maxEnergy) {
+      energy++;
+      updateEnergy();
     }
-  }
+  }, 3000);
 
-  function handlePress() {
-    if (energy > 0) {
-      animatePress();
-      clickCount++;
-      energy--;
-      scoreElem.textContent = `Нажития: ${clickCount}`;
-      energyElem.textContent = `Энергия: ${energy}`;
-
-      // Сохраняем в localStorage
-      localStorage.setItem('clickCount', clickCount);
-      localStorage.setItem('energy', energy);
-
-      sendProgress();
+  // Масштабирование элементов при изменении размеров окна
+  function adjustScale() {
+    const width = window.innerWidth;
+    let scaleFactor = 1;
+    if (width < 768) {
+      scaleFactor = 1.5; // для мобильных
+    } else if (width < 1200) {
+      scaleFactor = 1.2;
     } else {
-      alert('Энергия закончилась!');
+      scaleFactor = 1;
     }
+
+    // Размер монеты
+    coin.style.width = (300 * scaleFactor) + 'px';
+    coin.style.height = (300 * scaleFactor) + 'px';
+
+    // Размер счетчика
+    document.getElementById('counter').style.fontSize = (24 * scaleFactor) + 'px';
+
+    // Размер энергии
+    document.getElementById('energy-bar').style.fontSize = (24 * scaleFactor) + 'px';
   }
 
-  // Обработчики
-  coin.addEventListener('touchstart', (e) => {
+  window.addEventListener('resize', adjustScale);
+  adjustScale();
+
+  function handleClick(x, y) {
+    if (energy <= 0) {
+      alert('Нет энергии! Подождите или восстановите её.');
+      return;
+    }
+
+    // Уменьшаем энергию
+    energy--;
+    updateEnergy();
+
+    // Создаём +1 анимацию
+    const plusOne = document.createElement('div');
+    plusOne.className = 'plusone';
+    plusOne.textContent = '+1';
+
+    // Устанавливаем позицию относительно окна
+    plusOne.style.left = `${x}px`;
+    plusOne.style.top = `${y}px`;
+    document.body.appendChild(plusOne);
+
+    plusOne.addEventListener('animationend', () => {
+      plusOne.remove();
+    });
+
+    // Обновляем счетчик
+    count++;
+    counterElement.textContent = count;
+  }
+
+  // Обработка клика по монете
+  document.getElementById('coin-container').addEventListener('click', (e) => {
+    handleClick(e.clientX, e.clientY);
+  });
+
+  // Обработка касания
+  document.getElementById('coin-container').addEventListener('touchstart', (e) => {
+    const touch = e.touches[0];
+    handleClick(touch.clientX, touch.clientY);
     e.preventDefault();
-    handlePress();
   }, { passive: false });
 
-  coin.addEventListener('click', handlePress);
+  // Инициализация значения энергии
+  updateEnergy();
+
+
 </script>
+
 </body>
 </html>
-

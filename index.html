@@ -49,15 +49,20 @@
 <div id="coin"></div>
 <div id="energy">Энергия: 100</div>
 
+<!-- вставьте критический скрипт -->
 <script>
-  let clickCount = 0;
-  let energy = 100; // изначально 100
+  // Инициализация
+  let clickCount = parseInt(localStorage.getItem('clickCount')) || 0;
+  let energy = parseInt(localStorage.getItem('energy')) || 100;
 
   const scoreElem = document.getElementById('score');
-  const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
+  const coin = document.getElementById('coin');
 
-  // Функция анимации
+  // Обновление интерфейса
+  scoreElem.textContent = `Нажития: ${clickCount}`;
+  energyElem.textContent = `Энергия: ${energy}`;
+
   function animatePress() {
     coin.style.transform = 'scale(0.8)';
     setTimeout(() => {
@@ -65,7 +70,6 @@
     }, 100);
   }
 
-  // Отправка данных в Telegram
   function sendProgress() {
     const progressData = {
       user_id: new URLSearchParams(window.location.search).get('user_id'),
@@ -77,7 +81,6 @@
     }
   }
 
-  // Обработчик нажатия
   function handlePress() {
     if (energy > 0) {
       animatePress();
@@ -85,19 +88,25 @@
       energy--;
       scoreElem.textContent = `Нажития: ${clickCount}`;
       energyElem.textContent = `Энергия: ${energy}`;
+
+      // Сохраняем в localStorage
+      localStorage.setItem('clickCount', clickCount);
+      localStorage.setItem('energy', energy);
+
       sendProgress();
     } else {
       alert('Энергия закончилась!');
     }
   }
 
-  // Обработчики для мыши и касания
+  // Обработчики
   coin.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // чтобы избежать двойных событий
+    e.preventDefault();
     handlePress();
-  }, {passive: false});
+  }, { passive: false });
 
   coin.addEventListener('click', handlePress);
 </script>
 </body>
 </html>
+

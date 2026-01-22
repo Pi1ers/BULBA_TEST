@@ -26,17 +26,11 @@
     position: fixed;
     bottom: 20px;
     left: 20px;
-    display: flex; /* Добавил для горизонтального расположения элементов */
-    align-items: center;
     font-size: 1.5em;
+    margin-bottom: 20px;
   }
 
-  #lightning {
-    width: 50px;   /* Размер молнии по желанию */
-    height: 50px;  
-    margin-right: 10px; /* Abstand между изображением и числом */
-  }
-
+  
   
   #coin {
     width: 45vw; /* Размер зависит от ширины окна */
@@ -56,9 +50,7 @@
 
 <div id="score">0</div>
 <div id="coin"></div>
-<div id="energy">
-  <img id="lightning" src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/energy.gif" alt="Молния" /> <!-- вставьте сюда свой gif -->
-  <span id="energy-value">100</span>
+<div id="energy">Энергия: 100</div>
 </div>
 
 <script>
@@ -68,8 +60,7 @@
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
-  const energyValueSpan = document.getElementById('energy-value');
-  const lightningImg = document.getElementById('lightning');
+  
 
   // Функция анимации нажатия
   function animatePress() {

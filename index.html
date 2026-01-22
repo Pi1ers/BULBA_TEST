@@ -62,25 +62,29 @@
   const energyElem = document.getElementById('energy');
   
 
-  // Функция анимации нажатия
-  function animatePress() {
-    coin.style.transform = 'scale(0.85)';
-    setTimeout(() => {
-      coin.style.transform = 'scale(1)';
-    }, 100);
-  }
+// В конце скрипта, после обновления данных
+function sendProgress() {
+  const progressData = {
+    user_id: new URLSearchParams(window.location.search).get('user_id'),
+    score: clickCount,
+    energy: energy
+  };
+  Telegram.WebApp.sendData(JSON.stringify(progressData));
+}
 
-  function handlePress() {
-    if (energy > 0) {
-      animatePress();
-      clickCount++;
-      energy--;
-      scoreElem.textContent = `Нажития: ${clickCount}`;
-      energyElem.textContent = `Энергия: ${energy}`;
-    } else {
-      alert('Энергия закончилась!'); // или можно просто отключить кнопку
-    }
+// В handlePress() добавьте вызов sendProgress() после обновления score и energy:
+function handlePress() {
+  if (energy > 0) {
+    animatePress();
+    clickCount++;
+    energy--;
+    scoreElem.textContent = `Нажития: ${clickCount}`;
+    energyElem.textContent = `Энергия: ${energy}`;
+    sendProgress();
+  } else {
+    alert('Энергия закончилась!');
   }
+}
 
   
 
@@ -96,6 +100,7 @@
 
 </body>
 </html>
+
 
 
 

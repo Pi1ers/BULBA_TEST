@@ -71,12 +71,33 @@
     // добавьте свои изображения для дальнейших уровней
   ];
 
+    // сообщения для каждого уровня
+  const congratulationsMessages = [
+    "Вы достигли уровня 1! Отличная работа!",
+    "Поздравляю! Вы достигли уровня 2!",
+    "Великолепно! Теперь у вас уровень 3!",
+    "Вы настоящий эксперт! Уровень 4 достигнут!",
+    // добавьте свои сообщения по мере роста уровней
+  ];
+  
   function updateCoinImage() {
     const imageIndex = Math.min(level - 1, coinImages.length - 1);
     coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
   }
 
-  // Обновляем уровень по общему количеству нажатий
+   // Обновляем уровень и показываем сообщение при повышении
+  function updateLevel() {
+    const newLevel = Math.floor(clickCount / hitsPerLevel) + 1;
+    if (newLevel > level) {
+      level = newLevel;
+      // Получение сообщения для текущего уровня
+      const message = congratulationsMessages[Math.min(level - 1, congratulationsMessages.length - 1)];
+      alert(message);
+      updateCoinImage();
+    }
+  }
+
+    // Обновляем уровень по общему количеству нажатий
   function updateLevel() {
     level = Math.floor(clickCount / hitsPerLevel) + 1;
     updateCoinImage();
@@ -118,6 +139,7 @@
 
 </body>
 </html>
+
 
 
 

@@ -27,11 +27,8 @@
     bottom: 20px;
     left: 20px;
     font-size: 1.5em;
-    margin-bottom: 20px;
   }
 
-  
-  
   #coin {
     width: 45vw; /* Размер зависит от ширины окна */
     height: 45vw;
@@ -52,7 +49,6 @@
 <div id="coin"></div>
 <div id="energy">Энергия: 100</div>
 
-
 <script>
   let clickCount = 0;
   let energy = 100; // изначально 100
@@ -60,57 +56,48 @@
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
-  
 
-// В конце скрипта, после обновления данных
-function sendProgress() {
-  const progressData = {
-    user_id: new URLSearchParams(window.location.search).get('user_id'),
-    score: clickCount,
-    energy: energy
-  };
-  Telegram.WebApp.sendData(JSON.stringify(progressData));
-}
-
-// В handlePress() добавьте вызов sendProgress() после обновления score и energy:
-function handlePress() {
-  if (energy > 0) {
-    animatePress();
-    clickCount++;
-    energy--;
-    scoreElem.textContent = `Нажития: ${clickCount}`;
-    energyElem.textContent = `Энергия: ${energy}`;
-    sendProgress();
-  } else {
-    alert('Энергия закончилась!');
+  // Функция анимации
+  function animatePress() {
+    coin.style.transform = 'scale(0.8)';
+    setTimeout(() => {
+      coin.style.transform = 'scale(1)';
+    }, 100);
   }
-}
 
-  
+  // Отправка данных в Telegram
+  function sendProgress() {
+    const progressData = {
+      user_id: new URLSearchParams(window.location.search).get('user_id'),
+      score: clickCount,
+      energy: energy
+    };
+    if (window.Telegram && Telegram.WebApp) {
+      Telegram.WebApp.sendData(JSON.stringify(progressData));
+    }
+  }
 
-  // Для мобильных устройств: touchstart
+  // Обработчик нажатия
+  function handlePress() {
+    if (energy > 0) {
+      animatePress();
+      clickCount++;
+      energy--;
+      scoreElem.textContent = `Нажития: ${clickCount}`;
+      energyElem.textContent = `Энергия: ${energy}`;
+      sendProgress();
+    } else {
+      alert('Энергия закончилась!');
+    }
+  }
+
+  // Обработчики для мыши и касания
   coin.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // предотвратить эмуляцию мыши
+    e.preventDefault(); // чтобы избежать двойных событий
     handlePress();
   }, {passive: false});
 
-  // Для десктопа: click
   coin.addEventListener('click', handlePress);
 </script>
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-

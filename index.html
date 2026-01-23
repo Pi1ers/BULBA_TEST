@@ -30,8 +30,6 @@
     margin-bottom: 20px;
   }
 
-  
-  
   #coin {
     width: 45vw; /* Размер зависит от ширины окна */
     height: 45vw;
@@ -51,33 +49,47 @@
 <div id="score">0</div>
 <div id="coin"></div>
 <div id="energy">Энергия: 100</div>
-</div>
 
 <script>
   let clickCount = 0; // общее число нажатий
   let energy = 100; // энергия
   let level = 1; // текущий уровень
-  const hitsPerLevel = 10; // нажаний на уровень
 
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
 
-  // изображения для уровней
+  // Массив пороговых очков для уровней
+  const levelThresholds = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+
+  // изображения для уровней (добавьте свои, если нужно)
   const coinImages = [
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png', // Уровень 0
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%201.png', // Уровень 1
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%202%20STONE_COIN.png', // Уровень 2
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%203%20CLAY_COIN.png', // Уровень 3
+    'hhttps://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%203%20CLAY_COIN.png', // Уровень 3\
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%204%20IRON_BULBA.png', // Уровень 4
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%205%20Copper_COIN.png', // Уровень 5
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%206%20Broize_coin.png', // Уровень 6
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%207%20Silver_coin.png', // Уровень 7
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%208%20GOLD_COIN.png', // Уровень 8
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%209%20Titanium_coin.png', // Уровень 9
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%2010%20DIAMOND_COIN.png', // Уровень 10
     // добавьте свои изображения для дальнейших уровней
   ];
 
   // сообщения для каждого уровня
   const congratulationsMessages = [
-    "Вы достигли уровня Дерево! Отличная работа!",
-    "Поздравляю! Вы достигли уровня Камня!",
-    "Великолепно! Теперь у вас уровень Глина!",
-    "Вы настоящий эксперт! Уровень Железо достигнут!",
+    "Поздравляю! Вы достигли уровня 1 Дерево!",
+    "Поздравляю! Вы достигли уровня 2 Камня!",
+    "Поздравляю! Вы достигли уровня 3 Глина!",
+    "Поздравляю! Вы достигли уровня 4 Железо!",
+    "Поздравляю! Вы достигли уровня 5 Медь!",
+    "Поздравляю! Вы достигли уровня 6 Бронза!",
+    "Поздравляю! Вы достигли уровня 7 Серобро!",
+    "Поздравляю! Вы достигли уровня 8 Золото!",
+    "Поздравляю! Вы достигли уровня 9 Платина!",
+    "Поздравляю! Вы достигли уровня 10 Алмаз!",
     // добавьте свои сообщения по мере роста уровней
   ];
 
@@ -86,19 +98,22 @@
     coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
   }
 
-  // Обновляем уровень и показываем сообщение при повышении
-  function updateLevel() {
-    const newLevel = Math.floor(clickCount / hitsPerLevel) + 1;
-    if (newLevel > level) {
-      level = newLevel;
-      // Получение сообщения для текущего уровня
-      const message = congratulationsMessages[Math.min(level - 1, congratulationsMessages.length - 1)];
-      alert(message);
-      updateCoinImage();
+  // Проверяет и обновляет уровень на основе очков
+  function updateLevelByScore() {
+    for (let i = levelThresholds.length - 1; i >= 0; i--) {
+      if (clickCount >= levelThresholds[i]) {
+        if (i + 1 > level) {
+          level = i + 1;
+          const message = congratulationsMessages[Math.min(level - 1, congratulationsMessages.length - 1)];
+          alert(message);
+          updateCoinImage();
+        }
+        break;
+      }
     }
   }
 
-  // Анимация
+  // Анимация нажатия
   function animatePress() {
     coin.style.transform = 'scale(0.85)';
     setTimeout(() => {
@@ -111,11 +126,12 @@
       animatePress();
       clickCount++;
       energy--;
-      scoreElem.textContent = `Нажития: ${clickCount}`;
+      scoreElem.textContent = `Очки: ${clickCount}`;
       energyElem.textContent = `Энергия: ${energy}`;
 
-      // Проверка уровня
-      updateLevel();
+      // Проверка и обновление уровня по очкам
+      updateLevelByScore();
+
     } else {
       alert('Энергия закончилась!');
     }
@@ -134,21 +150,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

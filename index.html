@@ -29,18 +29,25 @@
     font-size: 1.5em;
     margin-bottom: 20px;
   }
-
   #coin {
-    width: 45vw; /* Размер зависит от ширины окна */
+    width: 45vw;
     height: 45vw;
-    max-width: 300px; /* максимум размера */
+    max-width: 300px;
     max-height: 300px;
-    min-width: 300px; /* минимум размера */
-    min-height: 300px;
+    min-width: 150px; /* уменьшил минимальный размер для мобильных, чтобы он был больше, чем сейчас */
+    min-height: 150px;
     background-image: url('https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png');
     background-size: cover;
     cursor: pointer;
     transition: transform 0.1s ease;
+  }
+  
+  /* Медиазапрос для мобильных устройств (например, ширина менее 600px) */
+  @media (max-width: 600px) {
+    #coin {
+      min-width: 200px; /* увеличиваем минимальный размер для мобильных */
+      min-height: 200px;
+    }
   }
 </style>
 </head>
@@ -151,4 +158,5 @@
 
 </body>
 </html>
+
 

@@ -19,11 +19,8 @@
 
   #score {
     font-size: 2em;
-    margin-bottom: 20px;
-    display: flex; /* Используем flex-контейнер */
-    align-items: center; /* Центрирование по вертикали */
-    justify-content: center; /* Центрирование по горизонтали */
-    height: 50px; /* Можно задать нужную высоту */
+    vertical-align: middle; /* при необходимости */
+    line-height: 1;
   }
 
   #energy {
@@ -62,8 +59,8 @@
 }
 .score-wrapper {
   display: inline-flex;
-  align-items: center;
-  gap: 5px; /* между картинкой и счетчиком, можно заменить margin-right */
+  align-items: center; /* вертикальное центрирование внутри контейнера */
+  gap: 5px;
 }
 
   
@@ -73,7 +70,7 @@
   
 <div class="score-wrapper">
   <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px; display:inline-block; vertical-align: middle;" alt="score icon">
-<div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
+  <div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
 </div>
 <div id="coin"></div>
 <div id="energy">&#9889; 100</div>
@@ -183,6 +180,7 @@
 
 </body>
 </html>
+
 
 
 

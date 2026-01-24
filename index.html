@@ -54,12 +54,21 @@
     min-height: 250px;
   }
 }
+.score-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px; /* между картинкой и счетчиком, можно заменить margin-right */
+}
+
   
 </style>
 </head>
 <body>
-
-<div id="score">0</div>
+  
+<div class="score-wrapper">
+  <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/bulba-score.png" style="width:20px; vertical-align:middle; margin-right:5px;" alt="score icon">
+  <div id="score">0</div>
+</div>
 <div id="coin"></div>
 <div id="energy">&#9889; 100</div>
 
@@ -164,6 +173,7 @@
 
 </body>
 </html>
+
 
 
 

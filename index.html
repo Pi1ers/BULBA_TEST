@@ -25,11 +25,23 @@
 
   #energy {
     position: fixed;
-    bottom: 20px;
+    bottom: 90px;
     left: 20px;
-    font-size: 1.5em;
+    font-size: 2em; /* увеличили размер */
     margin-bottom: 20px;
+    margin-top: 50px;
+    font-weight: bold;
+    color: #fff; /* белый цвет */
+    text-shadow: 0 0 8px #00ffcc, 0 0 8px #01ffc, 0 0 30px #000fff; /* свечащий эффект */
+    transition: all 0.3s ease;
   }
+
+#energy.updating {
+  transform: scale(0.8);
+  color: #fff;
+  transition: all 0.2s ease;
+}
+
   #coin {
     width: 70vw; /* увеличили с 45vw на например 70vw */
     height: 70vw;
@@ -45,7 +57,7 @@
     transition: transform 0.1s ease;
     border: 2px solid transparent; /* при необходимости, для визуализации */
   }
-  
+
 /* Для мобильных устройств (см. вертикальную ориентацию) сделаем монету еще больше */
 @media (max-width: 600px) and (orientation: portrait) {
   #coin {
@@ -64,17 +76,77 @@
   margin-bottom: 40px;
 }
 
-  
+.bottom-buttons {
+  background-color: #222; /* или ваш текущий цвет фона */
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  box-shadow: 0 -0 15px 4px gold;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* по центру или распределяйте по желанию */
+  gap: 10px; /* расстояние между кнопками */
+  background: rgba(0, 0, 0, 0.5); /* фон, чтобы было видно */
+  padding: 10px 0;
+  z-index: 999; /* чтобы быть сверху */
+}
+
+.custom-btn {
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+}
+
+.btn-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+
+
+
 </style>
 </head>
 <body>
-  
+
 <div class="score-wrapper">
   <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px; display:inline-block; vertical-align: middle;" alt="score icon">
   <div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
 </div>
 <div id="coin"></div>
 <div id="energy">&#9889; 100</div>
+
+<div class="bottom-buttons">
+  <button class="custom-btn">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" alt="Icon1" class="btn-icon">
+    <span>ФАРМ</span>
+  </button>
+  <button class="custom-btn">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" alt="Icon2" class="btn-icon">
+    <span>РЫНОК</span>
+  </button>
+  <button class="custom-btn">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/друзья-removebg-preview.png" alt="Icon3" class="btn-icon">
+    <span>ДРУЗЬЯ</span>
+  </button>
+  <button class="custom-btn">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/банк-removebg-preview.png" alt="Icon4" class="btn-icon">
+    <span>БАНК</span>
+  </button>
+  <button class="custom-btn">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/иконка_airdrop-removebg-preview.png" alt="Icon5" class="btn-icon">
+    <span>AIRDROP</span>
+  </button>
+</div>
+
 
 <script>
   let clickCount = 0;
@@ -89,17 +161,17 @@
   const levelThresholds = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 
   const coinImages = [
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%201.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%202%20STONE_COIN.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%203%20CLAY_COIN.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 4%20IRON_BULBA.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 5%20Copper_COIN.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 6%20Broize_coin.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 7%20Silver_coin.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 8%20GOLD_COIN.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 9%20Titanium_coin.png', 
-    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL% 10%20DIAMOND_COIN.png'
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%201.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%202%20STONE_COIN.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%203%20CLAY_COIN.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%204%20IRON_BULBA.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%205%20Copper_COIN.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%206%20Broize_coin.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%207%20Silver_coin.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%208%20GOLD_COIN.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%209%20Titanium_coin.png',
+    'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%210%20DIAMOND_COIN.png'
   ];
 
   const congratulationsMessages = [
@@ -142,6 +214,12 @@
   }
 
   function updateEnergyDisplay() {
+    // временно добавим класс для анимации
+    energyElem.classList.remove('updating');
+    void energyElem.offsetWidth; // перезапуск анимации
+    energyElem.classList.add('updating');
+
+    // Обновляем содержимое
     energyElem.textContent = `⚡ ${energy}`;
   }
 
@@ -181,30 +259,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -2,9 +2,11 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8" />
+<!-- ОЧЕНЬ ВАЖНО ДЛЯ ТЕЛЕФОНОВ И TELEGRAM MINI APP -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>Монета с Анимацией</title>
+<title>Монета с Анимацией и Рынком</title>
 <style>
+  /* === ОБЩИЕ СТИЛИ И ОСНОВНОЙ КОНТЕЙНЕР === */
   body {
     margin: 0;
     padding: 0;
@@ -12,133 +14,109 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: center; /* Центрирует все по вертикали изначально */
     height: 100vh;
     font-family: Arial, sans-serif;
     color: #fff;
+    overflow: hidden; /* Скрывает полосы прокрутки */
   }
 
-  /* Обертка счета и иконка */
+  /* === СТИЛИ ЭКРАНОВ ИГРЫ (Фарм, Рынок и т.д.) === */
+  .game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Возвращает центрирование контента внутри экрана */
+    width: 100%;
+    min-height: calc(100vh - 100px); /* Учитываем высоту футера */
+    padding-bottom: 20px;
+  }
+
+  /* === СЧЕТ И ЭНЕРГИЯ === */
   .score-wrapper {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    margin-top: -10vh;   /* Минусовое значение тянет блок вверх на 10% высоты экрана */
-    margin-bottom: 20px; /* Уменьшили отступ до монеты */
+    margin-bottom: 40px;
+    margin-top: -10vh; /* Поднимает очки и монету выше */
   }
-
-  .score-wrapper img {
-    width: 50px;
-    margin-right: 5px;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  #score {
-    font-size: 2em;
-    line-height: 1;
-    display: inline-block;
-    vertical-align: middle;
-  }
-
-  /* Монета */
-  #coin {
-    width: 70vw;
-    height: 70vw;
-    max-width: 300px;  /* ИСПРАВЛЕНО: было 25px, это слишком мало */
-    max-height: 300px; /* ИСПРАВЛЕНО: было 25px */
-    min-width: 200px;
-    min-height: 200px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    cursor: pointer;
-    transition: transform 0.1s ease;
-    border: 2px solid transparent;
-  }
-
-  /* Энергия */
+  #score { font-size: 2em; line-height: 1; }
   #energy {
     position: fixed;
-    bottom: 90px;
+    bottom: 150px;
     left: 20px;
     font-size: 2em;
-    margin-bottom: 20px;
-    margin-top: 50px;
     font-weight: bold;
-    color: #fff;
-    text-shadow: 0 0 8px #00ffcc, 0 0 8px #01ffc, 0 0 30px #000fff;
-    transition: all 0.3s ease;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
+  }
+  #energy.updating { transform: scale(0.8); transition: all 0.2s ease; }
+
+  /* === МОНЕТА === */
+  #coin {
+    width: 250px !important; /* Фиксированный размер для всех устройств */
+    height: 250px !important;
+    max-width: 500px;
+    max-height: 500px;
+    min-width: 150px;
+    min-height: 150px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain; /* Чтобы картинка не обрезалась */
+    cursor: pointer;
+    transition: transform 0.1s ease;
   }
 
-  #energy.updating {
-    transform: scale(0.8);
-    color: #fff;
-    transition: all 0.2s ease;
+  /* === ФУТЕР И НАВИГАЦИЯ (ПК ВЕРСИЯ ТЕЛЕГРАМ) === */
+  .bottom-buttons {
+    background-color: #222;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -0 15px 4px gold;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 0;
+    z-index: 999;
+  }
+  .custom-btn {
+    background: none; border: none; padding: 10px; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; color: white;
+    -webkit-tap-highlight-color: transparent; /* Убирает синюю вспышку на мобилках */
+  }
+  .btn-icon { width: 30px; height: 30px; object-fit: contain; }
+  .custom-btn span { font-size: 12px; }
+
+  /* === АДАПТИВНЫЕ СТИЛИ (ТЕЛЕФОНЫ) === */
+  @media (max-width: 600px) {
+    .bottom-buttons {
+      padding: 15px 0 30px 0; /* Увеличиваем высоту футера для пальцев */
+      justify-content: space-around; gap: 0;
+    }
+    .custom-btn { flex: 1; padding: 5px 0; }
+    .btn-icon { width: 48px !important; height: 48px !important; margin-bottom: 5px; }
+    .custom-btn span { font-size: 14px !important; font-weight: bold; }
+    #coin { width: 280px !important; height: 280px !important; } /* Чуть больше на мобилке */
   }
 
-
-  /* Футер и кнопки */
-  /* Основной блок футера */
-/* Контейнер футера */
-/* 1. БАЗОВЫЕ СТИЛИ ДЛЯ ПК (по умолчанию) */
-/* --- БАЗОВЫЕ СТИЛИ (ПК ВЕРСИЯ ТЕЛЕГРАМ) --- */
-.bottom-buttons {
-  background-color: #222; /* или ваш текущий цвет фона */
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  box-shadow: 0 -0 15px 4px gold;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center; /* по центру или распределяйте по желанию */
-  gap: 10px; /* расстояние между кнопками */
-  background: rgba(0, 0, 0, 0.5); /* фон, чтобы было видно */
-  padding: 10px 0;
-  z-index: 999; /* чтобы быть сверху */
-}
-
-.custom-btn {
-  background: none;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
-
-.btn-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-}
-
-.game-screen {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  /* Добавь это свойство, чтобы вернуть центрирование */
-  justify-content: center;
-
-  /* Занимает всю высоту, вычитая примерную высоту футера */
-  min-height: calc(100vh - 100px);
-  width: 100%;
-  padding-bottom: 20px;
-}
+  /* === СТИЛИ РЫНКА (ПРИМЕР) === */
+  .shop-item {
+    background: rgba(255, 255, 255, 0.1); padding: 20px; border-radius: 10px;
+    text-align: center; margin-top: 20px;
+  }
 </style>
-
 </head>
 <body>
 
-<!-- ЭКРАН ФАРМА (главный экран) -->
+<!-- ЭКРАН ФАРМА (главный экран, видимый по умолчанию) -->
 <div id="screen-farm" class="game-screen">
   <div class="score-wrapper">
-    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px; display:inline-block; vertical-align: middle;" alt="score icon">
-    <div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px;" alt="score icon">
+    <div id="score">0</div>
   </div>
   <div id="coin"></div>
   <div id="energy">⚡ 100</div>
@@ -146,30 +124,14 @@
 
 <!-- ЭКРАН РЫНКА -->
 <div id="screen-market" class="game-screen" style="display: none;">
-  <h2>Рынок</h2>
-  <p>Тут будут товары для покупки.</p>
+  <h2>РЫНОК</h2>
+  <div class="shop-item">
+    <p id="market-info">Здесь вы можете улучшить монету!</p>
+    <button onclick="buyNextLevel()" style="padding: 15px 30px; font-weight: bold; background: gold; border: none; border-radius: 10px;">УЛУЧШИТЬ МОНЕТУ</button>
+  </div>
 </div>
 
-<!-- ЭКРАН ДРУЗЕЙ -->
-<div id="screen-friends" class="game-screen" style="display: none;">
-  <h2>Друзья</h2>
-  <p>Тут будет список приглашений.</p>
-</div>
-
-<!-- ЭКРАН БАНКА -->
-<div id="screen-bank" class="game-screen" style="display: none;">
-  <h2>Банк</h2>
-  <p>Тут будут ваши накопления.</p>
-</div>
-
-<!-- ЭКРАН AIRDROP -->
-<div id="screen-airdrop" class="game-screen" style="display: none;">
-  <h2>Airdrop</h2>
-  <p>Тут будут задания для airdrop.</p>
-</div>
-
-
-<!-- ФУТЕР И КНОПКИ НАВИГАЦИИ -->
+<!-- ЭКРАН ДРУЗЕЙ, БАНКА, AIRDROP (скрыты по умолчанию) -->
 <div class="bottom-buttons">
   <button class="custom-btn" id="btn-farm">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/page%201.png" alt="Icon1" class="btn-icon">
@@ -193,26 +155,20 @@
   </button>
 </div>
 
-<!-- Скрипты идут ниже -->
-<!-- ... -->
-
-
-
-
-
 
 <script>
-  // ТВОИ ПЕРЕМЕННЫЕ
+  // ==================== 1. ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И НАСТРОЙКИ ====================
   let clickCount = 0;
   let energy = 100;
   const maxEnergy = 100;
-  let level = 1;
+  let level = 1; // Текущий уровень монеты (начинаем с 1)
 
   const scoreElem = document.getElementById('score');
   const coin = document.getElementById('coin');
   const energyElem = document.getElementById('energy');
 
-  const levelThresholds = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
+  // Цены для покупки уровней (индекс = уровень) Уровень 1 - бесплатно, Уровень 2 стоит 100, Уровень 3 стоит 500
+  const levelCosts = [0, 0, 100, 500, 1500, 5000, 15000, 50000, 150000, 500000, 1500000];
 
   const coinImages = [
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png',
@@ -229,66 +185,28 @@
   ];
 
   const congratulationsMessages = [
-    "Поздравляю! Вы достигли уровня 0 Разрушенная монета!",
-    "Поздравляю! Вы достигли уровня 1 Дерево!",
-    "Поздравляю! Вы достигли уровня 2 Камня!",
-    "Поздравляю! Вы достигли уровня 3 Глина!",
-    "Поздравляю! Вы достигли уровня 4 Железо!",
-    "Поздравляю! Вы достигли уровня 5 Медь!",
-    "Поздравляю! Вы достигли уровня 6 Бронза!",
-    "Поздравляю! Вы достигли уровня 7 Серебро!",
-    "Поздравляю! Вы достигли уровня 8 Золото!",
-    "Поздравляю! Вы достигли уровня 9 Платина!",
-    "Поздравляю! Вы достигли уровня 10 Алмаз!"
+    "Уровень 0", "Уровень 1 Дерево!", "Уровень 2 Камня!", "Уровень 3 Глина!",
+    "Уровень 4 Железо!", "Уровень 5 Медь!", "Уровень 6 Бронза!", "Уровень 7 Серебро!",
+    "Уровень 8 Золото!", "Уровень 9 Платина!", "Уровень 10 Алмаз!"
   ];
 
-  // --- ЛОГИКА НАВИГАЦИИ (НОВАЯ) ---
-  function switchTab(screenId) {
-    // Скрываем все экраны
-    document.querySelectorAll('.game-screen').forEach(s => s.style.display = 'none');
-    // Показываем нужный экран
-    const target = document.getElementById(screenId);
-    if (target) target.style.display = 'flex';
+  // ==================== 2. МОДУЛЬ ГЕЙМПЛЕЯ (КЛИКЕР И ЭНЕРГИЯ) ====================
 
-    // Подсветка кнопок (опционально)
-    document.querySelectorAll('.custom-btn').forEach(b => b.style.opacity = '0.6');
-    const activeBtnId = screenId.replace('screen-', 'btn-');
-    if(document.getElementById(activeBtnId)) {
-        document.getElementById(activeBtnId).style.opacity = '1';
-    }
-  }
+ function updateCoinImage() {
+    // Индекс массива = Уровень - 1
+    const imageIndex = level - 1;
 
-  // Привязываем кнопки к экранам
-  document.getElementById('btn-farm').onclick = () => switchTab('screen-farm');
-  document.getElementById('btn-market').onclick = () => switchTab('screen-market');
-  document.getElementById('btn-friends').onclick = () => switchTab('screen-friends');
-  document.getElementById('btn-bank').onclick = () => switchTab('screen-bank');
-  document.getElementById('btn-airdrop').onclick = () => switchTab('screen-airdrop');
-
-  // --- ТВОЯ ЛОГИКА КЛИКОВ ---
-  function updateCoinImage() {
-    const imageIndex = Math.min(level - 1, coinImages.length - 1);
-    coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
-  }
-
-  function updateLevelByScore() {
-    for (let i = levelThresholds.length - 1; i >= 0; i--) {
-      if (clickCount >= levelThresholds[i]) {
-        if (i + 1 > level) {
-          level = i + 1;
-          alert(congratulationsMessages[Math.min(level - 1, congratulationsMessages.length - 1)]);
-          updateCoinImage();
-        }
-        break;
-      }
+    // Проверка, чтобы не выйти за пределы массива
+    if (imageIndex >= 0 && imageIndex < coinImages.length) {
+        coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
+    } else {
+        console.error("Ошибка: Неверный индекс изображения для уровня " + level);
     }
   }
 
   function animatePress() {
     coin.style.transform = 'scale(0.85)';
-    setTimeout(() => {
-      coin.style.transform = 'scale(1)';
-    }, 100);
+    setTimeout(() => { coin.style.transform = 'scale(1)'; }, 100);
   }
 
   function updateEnergyDisplay() {
@@ -314,17 +232,77 @@
       energy--;
       scoreElem.textContent = ` ${clickCount}`;
       updateEnergyDisplay();
-      updateLevelByScore();
+      // updateLevelByScore(); <-- Эту функцию мы убрали, теперь покупка через рынок
     } else {
-      alert('Энергия закончилась!');
+      // alert('Энергия закончилась!');
     }
   }
 
-  // ИНИЦИАЛИЗАЦИЯ
+  // ==================== 3. МОДУЛЬ НАВИГАЦИИ (ФУТЕР) ====================
+
+  function switchTab(screenId) {
+    document.querySelectorAll('.game-screen').forEach(s => s.style.display = 'none');
+    const target = document.getElementById(screenId);
+    if (target) target.style.display = 'flex';
+
+    document.querySelectorAll('.custom-btn').forEach(b => b.style.opacity = '0.6');
+    const activeBtnId = screenId.replace('screen-', 'btn-');
+    if(document.getElementById(activeBtnId)) {
+        document.getElementById(activeBtnId).style.opacity = '1';
+    }
+
+    // Если перешли на рынок, обновляем его данные
+    if (screenId === 'screen-market') {
+        updateMarketUI();
+    }
+  }
+  document.getElementById('btn-farm').onclick = () => switchTab('screen-farm');
+  document.getElementById('btn-market').onclick = () => switchTab('screen-market');
+  document.getElementById('btn-friends').onclick = () => switchTab('screen-friends');
+  document.getElementById('btn-bank').onclick = () => switchTab('screen-bank');
+  document.getElementById('btn-airdrop').onclick = () => switchTab('screen-airdrop');
+
+  // ==================== 4. МОДУЛЬ ЭКОНОМИКИ (РЫНОК) ====================
+  function updateMarketUI() {
+    const infoElem = document.getElementById('market-info');
+    const buyBtn = document.querySelector('#screen-market button');
+    let nextLevel = level + 1;
+
+    if (nextLevel < levelCosts.length) {
+        infoElem.innerHTML = `Следующий уровень: <b>${nextLevel}</b><br>Стоимость: <b>${levelCosts[nextLevel]}</b> монет`;
+        if(buyBtn) {
+            buyBtn.style.display = 'block';
+            buyBtn.textContent = `КУПИТЬ УРОВЕНЬ ${nextLevel}`;
+        }
+    } else {
+        infoElem.innerHTML = "У вас максимальный уровень! (Уровень " + level + ")";
+        if(buyBtn) buyBtn.style.display = 'none';
+    }
+  }
+
+  function buyNextLevel() {
+    let nextLevel = level + 1;
+    if (nextLevel >= levelCosts.length) return; // Проверка на макс. уровень
+
+    let cost = levelCosts[nextLevel];
+    if (clickCount >= cost) {
+        clickCount -= cost;
+        level = nextLevel;
+        scoreElem.textContent = ` ${clickCount}`;
+        updateCoinImage();
+        updateMarketUI();
+        alert(congratulationsMessages[level - 1]);
+        switchTab('screen-farm'); // Вернуться на фарм
+    } else {
+        alert(`Недостаточно монет! Нужно еще ${cost - clickCount}`);
+    }
+  }
+
+  // ==================== 5. ИНИЦИАЛИЗАЦИЯ (ЗАПУСК) ====================
   updateCoinImage();
   updateEnergyDisplay();
   startEnergyRegen();
-  switchTab('screen-farm'); // Сразу открываем фарм
+  // updateMarketUI(); // Обновится при первом клике на "Рынок"
 
   coin.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -333,17 +311,5 @@
   coin.addEventListener('click', handlePress);
 </script>
 
-
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

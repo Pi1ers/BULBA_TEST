@@ -79,62 +79,71 @@
   /* Футер и кнопки */
   /* Основной блок футера */
 /* Контейнер футера */
+/* 1. БАЗОВЫЕ СТИЛИ ДЛЯ ПК (по умолчанию) */
 .bottom-buttons {
-  background: #1c1c1c; /* Темный фон для контраста */
+  background: rgba(20, 20, 20, 0.95);
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-around;
-  align-items: flex-end; /* Выравнивание по низу */
-  padding: 10px 0 25px 0; /* 25px снизу важно для iOS (зона под полоской) */
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  justify-content: center; /* Центрируем на ПК */
+  gap: 20px;
+  padding: 10px 0;
   border-top: 2px solid gold;
   z-index: 9999;
 }
 
-/* Кнопка */
 .custom-btn {
   background: none;
   border: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  flex: 1;
   color: white;
-  padding: 5px 0;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+  width: 80px; /* Фиксированная ширина на ПК */
 }
 
-/* ИКОНКА - ПРИНУДИТЕЛЬНО КРУПНАЯ ДЛЯ ТЕЛЕГРАМА */
 .btn-icon {
-  width: 48px !important;  /* Увеличили значительно */
-  height: 48px !important;
-  margin-bottom: 6px;
+  width: 30px; /* Маленькие аккуратные иконки для ПК */
+  height: 30px;
   object-fit: contain;
-  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.2)); /* Легкое свечение */
+  margin-bottom: 5px;
 }
 
-/* ТЕКСТ ПОД ИКОНКОЙ */
 .custom-btn span {
-  font-size: 13px !important; /* Четкий читаемый шрифт */
-  font-weight: 800; /* Очень жирный */
+  font-size: 12px;
+  font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
-  white-space: nowrap; /* Чтобы не переносился */
 }
 
-/* Фикс для очень маленьких экранов (чтобы не слипались) */
-@media (max-width: 350px) {
-  .btn-icon {
-    width: 38px !important;
-    height: 38px !important;
+/* 2. МОБИЛЬНАЯ ВЕРСИЯ (только для экранов меньше 600px) */
+@media (max-width: 600px) {
+  .bottom-buttons {
+    justify-content: space-around; /* Распределяем по ширине */
+    padding: 12px 0 30px 0; /* Увеличиваем высоту под пальцы и iOS */
+    gap: 0;
   }
+
+  .custom-btn {
+    flex: 1; /* Кнопки занимают всё место */
+    width: auto;
+  }
+
+  .btn-icon {
+    width: 48px !important; /* ГИГАНТСКИЕ иконки для телефона */
+    height: 48px !important;
+  }
+
   .custom-btn span {
-    font-size: 10px !important;
+    font-size: 13px !important; /* Крупный текст для телефона */
+    letter-spacing: -0.5px;
+  }
+
+  #coin {
+    width: 85vw;
+    height: 85vw;
   }
 }
 
@@ -286,6 +295,7 @@
 
 </body>
 </html>
+
 
 
 

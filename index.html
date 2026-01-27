@@ -77,7 +77,7 @@
     transition: all 0.2s ease;
   }
 
-  
+
   /* Футер и кнопки */
   /* Основной блок футера */
 /* Контейнер футера */
@@ -117,44 +117,92 @@
   object-fit: contain;
 }
 
+.game-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Добавь это свойство, чтобы вернуть центрирование */
+  justify-content: center;
 
+  /* Занимает всю высоту, вычитая примерную высоту футера */
+  min-height: calc(100vh - 100px);
+  width: 100%;
+  padding-bottom: 20px;
+}
 </style>
 
 </head>
 <body>
 
-<div class="score-wrapper">
-  <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px; display:inline-block; vertical-align: middle;" alt="score icon">
-  <div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
+<!-- ЭКРАН ФАРМА (главный экран) -->
+<div id="screen-farm" class="game-screen">
+  <div class="score-wrapper">
+    <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" style="width:50px; margin-right:5px; display:inline-block; vertical-align: middle;" alt="score icon">
+    <div id="score" style="font-size:2em; line-height:1; display:inline-block; vertical-align: middle;">0</div>
+  </div>
+  <div id="coin"></div>
+  <div id="energy">⚡ 100</div>
 </div>
-<div id="coin"></div>
-<div id="energy">&#9889; 100</div>
 
+<!-- ЭКРАН РЫНКА -->
+<div id="screen-market" class="game-screen" style="display: none;">
+  <h2>Рынок</h2>
+  <p>Тут будут товары для покупки.</p>
+</div>
+
+<!-- ЭКРАН ДРУЗЕЙ -->
+<div id="screen-friends" class="game-screen" style="display: none;">
+  <h2>Друзья</h2>
+  <p>Тут будет список приглашений.</p>
+</div>
+
+<!-- ЭКРАН БАНКА -->
+<div id="screen-bank" class="game-screen" style="display: none;">
+  <h2>Банк</h2>
+  <p>Тут будут ваши накопления.</p>
+</div>
+
+<!-- ЭКРАН AIRDROP -->
+<div id="screen-airdrop" class="game-screen" style="display: none;">
+  <h2>Airdrop</h2>
+  <p>Тут будут задания для airdrop.</p>
+</div>
+
+
+<!-- ФУТЕР И КНОПКИ НАВИГАЦИИ -->
 <div class="bottom-buttons">
-  <button class="custom-btn">
+  <button class="custom-btn" id="btn-farm">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/page%201.png" alt="Icon1" class="btn-icon">
     <span>ФАРМ</span>
   </button>
-  <button class="custom-btn">
+  <button class="custom-btn" id="btn-market">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" alt="Icon2" class="btn-icon">
     <span>РЫНОК</span>
   </button>
-  <button class="custom-btn">
+  <button class="custom-btn" id="btn-friends">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/друзья-removebg-preview.png" alt="Icon3" class="btn-icon">
     <span>ДРУЗЬЯ</span>
   </button>
-  <button class="custom-btn">
+  <button class="custom-btn" id="btn-bank">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/банк-removebg-preview.png" alt="Icon4" class="btn-icon">
     <span>БАНК</span>
   </button>
-  <button class="custom-btn">
+  <button class="custom-btn" id="btn-airdrop">
     <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/иконка_airdrop-removebg-preview.png" alt="Icon5" class="btn-icon">
     <span>AIRDROP</span>
   </button>
 </div>
 
+<!-- Скрипты идут ниже -->
+<!-- ... -->
+
+
+
+
+
 
 <script>
+  // ТВОИ ПЕРЕМЕННЫЕ
   let clickCount = 0;
   let energy = 100;
   const maxEnergy = 100;
@@ -194,6 +242,30 @@
     "Поздравляю! Вы достигли уровня 10 Алмаз!"
   ];
 
+  // --- ЛОГИКА НАВИГАЦИИ (НОВАЯ) ---
+  function switchTab(screenId) {
+    // Скрываем все экраны
+    document.querySelectorAll('.game-screen').forEach(s => s.style.display = 'none');
+    // Показываем нужный экран
+    const target = document.getElementById(screenId);
+    if (target) target.style.display = 'flex';
+
+    // Подсветка кнопок (опционально)
+    document.querySelectorAll('.custom-btn').forEach(b => b.style.opacity = '0.6');
+    const activeBtnId = screenId.replace('screen-', 'btn-');
+    if(document.getElementById(activeBtnId)) {
+        document.getElementById(activeBtnId).style.opacity = '1';
+    }
+  }
+
+  // Привязываем кнопки к экранам
+  document.getElementById('btn-farm').onclick = () => switchTab('screen-farm');
+  document.getElementById('btn-market').onclick = () => switchTab('screen-market');
+  document.getElementById('btn-friends').onclick = () => switchTab('screen-friends');
+  document.getElementById('btn-bank').onclick = () => switchTab('screen-bank');
+  document.getElementById('btn-airdrop').onclick = () => switchTab('screen-airdrop');
+
+  // --- ТВОЯ ЛОГИКА КЛИКОВ ---
   function updateCoinImage() {
     const imageIndex = Math.min(level - 1, coinImages.length - 1);
     coin.style.backgroundImage = `url('${coinImages[imageIndex]}')`;
@@ -220,12 +292,9 @@
   }
 
   function updateEnergyDisplay() {
-    // временно добавим класс для анимации
     energyElem.classList.remove('updating');
-    void energyElem.offsetWidth; // перезапуск анимации
+    void energyElem.offsetWidth;
     energyElem.classList.add('updating');
-
-    // Обновляем содержимое
     energyElem.textContent = `⚡ ${energy}`;
   }
 
@@ -251,10 +320,11 @@
     }
   }
 
-  // Инициализация
+  // ИНИЦИАЛИЗАЦИЯ
   updateCoinImage();
   updateEnergyDisplay();
   startEnergyRegen();
+  switchTab('screen-farm'); // Сразу открываем фарм
 
   coin.addEventListener('touchstart', (e) => {
     e.preventDefault();
@@ -263,19 +333,9 @@
   coin.addEventListener('click', handlePress);
 </script>
 
+
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
 
 
 

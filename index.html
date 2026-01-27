@@ -17,112 +17,126 @@
     color: #fff;
   }
 
-  #score {
-    font-size: 2em;
-    vertical-align: middle; /* при необходимости */
-    line-height: 1;
+  /* Обертка счета и иконка */
+  .score-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 40px;
   }
 
+  .score-wrapper img {
+    width: 50px;
+    margin-right: 5px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  #score {
+    font-size: 2em;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  /* Энергия */
   #energy {
     position: fixed;
     bottom: 90px;
     left: 20px;
-    font-size: 2em; /* увеличили размер */
+    font-size: 2em;
     margin-bottom: 20px;
     margin-top: 50px;
     font-weight: bold;
-    color: #fff; /* белый цвет */
-    text-shadow: 0 0 8px #00ffcc, 0 0 8px #01ffc, 0 0 30px #000fff; /* свечащий эффект */
+    color: #fff;
+    text-shadow: 0 0 8px #00ffcc, 0 0 8px #01ffc, 0 0 30px #000fff;
     transition: all 0.3s ease;
   }
 
-#energy.updating {
-  transform: scale(0.8);
-  color: #fff;
-  transition: all 0.2s ease;
-}
+  #energy.updating {
+    transform: scale(0.8);
+    color: #fff;
+    transition: all 0.2s ease;
+  }
 
+  /* Монета */
   #coin {
-    width: 70vw; /* увеличили с 45vw на например 70vw */
+    width: 70vw;
     height: 70vw;
-    max-width: 500px; /* оставляем границы для мобильных */
+    max-width: 500px;
     max-height: 500px;
-    min-width: 250px; /* чтобы на мобильных было тоже крупнее */
+    min-width: 250px;
     min-height: 250px;
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url(''); /* ваши изображения */
-    background-size: cover; /* масштабируем изображение под размер блока */
+    /* Убедитесь, что здесь указан URL изображения по умолчанию, если нужен */
+    background-size: cover;
     cursor: pointer;
     transition: transform 0.1s ease;
-    border: 2px solid transparent; /* при необходимости, для визуализации */
+    border: 2px solid transparent;
   }
 
-/* Для мобильных устройств (см. вертикальную ориентацию) сделаем монету еще больше */
-@media (max-width: 600px) and (orientation: portrait) {
-  #coin {
-    width: 50vw; /* увеличиваем ширину до 70% ширины экрана */
-    height: 50vw; /* сохраняем пропорции */
-    max-width: 500px; /* устанавливаем максимум размера */
-    max-height: 500px;
-    min-width: 250px; /* минимальный размер для мобильных */
-    min-height: 250px;
+  /* Футер и кнопки */
+  .bottom-buttons {
+    background-color: #222;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -0 15px 4px gold;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 10px 0;
+    z-index: 999;
   }
-}
-  
-/* Для мобильных устройств кнопки */ 
-@media (max-width: 600px) {
-  #backToTopBtn, #likeBtn, #aboutBtn {
-    padding: 20px 30px;
-    font-size: 20px;
+
+  .custom-btn {
+    background: none;
+    border: none;
+    padding: 5px; /* Уменьшаем базовый отступ */
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    flex: 1; /* Кнопки равномерно распределяются по ширине */
+    min-width: 0; /* Важно для предотвращения поломки верстки при flex */
   }
-}
-  
-.score-wrapper {
-  display: inline-flex;
-  align-items: center; /* вертикальное центрирование внутри контейнера */
-  gap: 5px;
-  margin-bottom: 40px;
-}
 
-.bottom-buttons {
-  background-color: #222; /* или ваш текущий цвет фона */
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  box-shadow: 0 -0 15px 4px gold;
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center; /* по центру или распределяйте по желанию */
-  gap: 10px; /* расстояние между кнопками */
-  background: rgba(0, 0, 0, 0.5); /* фон, чтобы было видно */
-  padding: 10px 0;
-  z-index: 999; /* чтобы быть сверху */
-}
+  .btn-icon {
+    width: 30px; /* Базовый размер */
+    height: 30px;
+    object-fit: contain;
+  }
 
-.custom-btn {
-  background: none;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  color: white;
-}
+  /* --- АДАПТИВНЫЕ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ --- */
 
-.btn-icon {
-  width: 30px;
-  height: 30px;
-  object-fit: contain;
-}
-
-
-
-
+  /* Общие стили для телефонов (до 600px) */
+  @media (max-width: 600px) {
+    /* Монета становится больше */
+    #coin {
+      width: 80vw;
+      height: 80vw;
+    }
+    
+    /* Иконки в футере увеличиваются */
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+    }
+    
+    /* Текст в футере становится крупнее */
+    .custom-btn span {
+      font-size: 12px;
+      font-weight: bold;
+    }
+  }
 </style>
+
 </head>
 <body>
 
@@ -268,6 +282,7 @@
 
 </body>
 </html>
+
 
 
 

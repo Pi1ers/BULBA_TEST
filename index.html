@@ -81,70 +81,37 @@
 /* Контейнер футера */
 /* 1. БАЗОВЫЕ СТИЛИ ДЛЯ ПК (по умолчанию) */
 .bottom-buttons {
-  background: rgba(20, 20, 20, 0.95);
+  background-color: #222; /* или ваш текущий цвет фона */
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  box-shadow: 0 -0 15px 4px gold;
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: center; /* Центрируем на ПК */
-  gap: 20px;
+  justify-content: center; /* по центру или распределяйте по желанию */
+  gap: 10px; /* расстояние между кнопками */
+  background: rgba(0, 0, 0, 0.5); /* фон, чтобы было видно */
   padding: 10px 0;
-  border-top: 2px solid gold;
-  z-index: 9999;
+  z-index: 999; /* чтобы быть сверху */
 }
 
 .custom-btn {
   background: none;
   border: none;
+  padding: 10px;
+  cursor: pointer;
   display: flex;
   flex-direction: column;
   align-items: center;
   color: white;
-  cursor: pointer;
-  width: 80px; /* Фиксированная ширина на ПК */
 }
 
 .btn-icon {
-  width: 30px; /* Маленькие аккуратные иконки для ПК */
+  width: 30px;
   height: 30px;
   object-fit: contain;
-  margin-bottom: 5px;
-}
-
-.custom-btn span {
-  font-size: 12px;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-/* 2. МОБИЛЬНАЯ ВЕРСИЯ (только для экранов меньше 600px) */
-@media (max-width: 600px) {
-  .bottom-buttons {
-    justify-content: space-around; /* Распределяем по ширине */
-    padding: 12px 0 30px 0; /* Увеличиваем высоту под пальцы и iOS */
-    gap: 0;
-  }
-
-  .custom-btn {
-    flex: 1; /* Кнопки занимают всё место */
-    width: auto;
-  }
-
-  .btn-icon {
-    width: 48px !important; /* ГИГАНТСКИЕ иконки для телефона */
-    height: 48px !important;
-  }
-
-  .custom-btn span {
-    font-size: 13px !important; /* Крупный текст для телефона */
-    letter-spacing: -0.5px;
-  }
-
-  #coin {
-    width: 85vw;
-    height: 85vw;
-  }
 }
 
 
@@ -295,6 +262,7 @@
 
 </body>
 </html>
+
 
 
 

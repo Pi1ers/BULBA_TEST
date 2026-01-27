@@ -21,18 +21,14 @@
     </div>
 
     <!-- ЭКРАН РЫНКА (Плитка) -->
-    <div id="screen-market" class="game-screen" style="display: none;">
-        <h2 style="margin-top: 20px;">РЫНОК</h2>
-        <div class="shop-grid">
-            <div class="shop-card" onclick="openMarketModal('level')">
-                <img src="https://raw.githubusercontent.com" alt="Level Up">
-                <h3>Уровень</h3>
-                <p>Улучши монету</p>
-                <span class="price-tag" id="market-price-display">Загрузка...</span>
-            </div>
-            <!-- Сюда можно добавить еще карточки -->
-        </div>
+    <!-- ЭКРАН РЫНКА (Плитка) -->
+<div id="screen-market" class="game-screen" style="display: none;">
+    <h2 style="margin-top: 20px;">РЫНОК УРОВНЕЙ</h2>
+    <!-- ЭТОТ КОНТЕЙНЕР ЗАПОЛНИТ JS -->
+    <div class="shop-grid" id="level-shop-grid">
+        <!-- Карточки появятся здесь -->
     </div>
+</div>
 
     <!-- МОДАЛЬНОЕ ОКНО -->
     <div id="shop-modal" class="modal-overlay" style="display: none;">

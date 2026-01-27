@@ -1,30 +1,121 @@
+/* === БАЗОВЫЕ СТИЛИ === */
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
 body {
-    margin: 0; padding: 0; background: linear-gradient(135deg, black, #2a5298);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100vh; font-family: Arial, sans-serif; color: #fff; overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, black, #2a5298);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
 }
+
 .game-screen {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    width: 100%; min-height: calc(100vh - 100px); padding-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    padding-bottom: 20px;
 }
-.score-wrapper { display: inline-flex; align-items: center; gap: 5px; margin-top: -10vh; margin-bottom: 20px; }
+
+/* === СЧЕТ И МОНЕТА === */
+.score-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: -10vh;
+    margin-bottom: 20px;
+}
+
 .score-wrapper img { width: 50px; }
-#score { font-size: 2em; }
-#energy { position: fixed; bottom: 120px; left: 20px; font-size: 1.5em; font-weight: bold; text-shadow: 0 0 8px #00ffcc; }
+
+#score { font-size: 2.5em; font-weight: bold; }
+
 #coin {
-    width: 250px !important; height: 250px !important;
-    background-position: center; background-repeat: no-repeat; background-size: contain;
-    cursor: pointer; transition: transform 0.1s ease;
+    width: 250px !important;
+    height: 250px !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    z-index: 5;
 }
+
+#energy {
+    position: fixed;
+    bottom: 120px;
+    left: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00ffcc;
+}
+
+/* === ФУТЕР === */
 .bottom-buttons {
-    background: rgba(34, 34, 34, 0.8); position: fixed; bottom: 0; width: 100%;
-    display: flex; justify-content: center; padding: 10px 0; border-top-left-radius: 15px; border-top-right-radius: 15px; box-shadow: 0 -5px 15px gold;
+    background: rgba(34, 34, 34, 0.8);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -5px 15px gold;
+    z-index: 1000;
 }
-.custom-btn { background: none; border: none; padding: 10px; cursor: pointer; display: flex; flex-direction: column; align-items: center; color: white; }
+
+.custom-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.custom-btn:active { transform: scale(0.9); }
+
 .btn-icon { width: 30px; height: 30px; object-fit: contain; }
+
+/* === МОБИЛЬНАЯ АДАПТАЦИЯ === */
 @media (max-width: 600px) {
     .bottom-buttons { padding: 10px 0 25px 0; justify-content: space-around; }
     .btn-icon { width: 35px !important; height: 35px !important; }
     .custom-btn span { font-size: 11px !important; }
     #coin { width: 200px !important; height: 200px !important; }
 }
+
+/* === АНИМАЦИЯ ЦИФР (ВЫЛЕТАЮЩИЕ +1) === */
+.floating-number {
+    position: fixed; /* Вырывает из потока, чтобы не двигать монету */
+    pointer-events: none;
+    color: gold;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 10000;
+    animation: floatUp 0.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -150px); opacity: 0; }
+}
+
+

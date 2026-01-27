@@ -77,41 +77,63 @@
   }
 
   /* Футер и кнопки */
-  .bottom-buttons {
-    background-color: #222;
-    border-top-left-radius: 15px;
-    border-top-right-radius: 15px;
-    box-shadow: 0 -0 15px 4px gold;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    padding: 10px 0;
-    z-index: 999;
-  }
+  /* Основной блок футера */
+.bottom-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around; /* Равномерно распределяем */
+  align-items: center;
+  background: rgba(20, 20, 20, 0.95); /* Чуть плотнее фон */
+  padding: 12px 0 25px 0; /* Больше отступа снизу для безрамочных iPhone */
+  border-top: 1px solid rgba(255, 215, 0, 0.3); /* Тонкая золотая линия сверху */
+  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
 
-  .custom-btn {
-    background: none;
-    border: none;
-    padding: 5px; /* Уменьшаем базовый отступ */
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: white;
-    flex: 1; /* Кнопки равномерно распределяются по ширине */
-    min-width: 0; /* Важно для предотвращения поломки верстки при flex */
-  }
+/* Кнопка */
+.custom-btn {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  color: #fff;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent; /* Убираем синюю вспышку при нажатии */
+}
 
+/* Сама ИКОНКА - теперь она привязана к ширине экрана */
+.btn-icon {
+  width: 10vw;       /* 10% от ширины экрана */
+  height: 10vw;
+  max-width: 45px;   /* Чтобы на планшетах не была гигантской */
+  min-width: 35px;   /* Чтобы на маленьких не была микроскопической */
+  margin-bottom: 5px;
+  object-fit: contain;
+}
+
+/* ТЕКСТ под иконкой */
+.custom-btn span {
+  font-size: 3.2vw;    /* Текст тоже зависит от ширины экрана */
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Ограничитель для очень больших экранов (чтобы не растягивалось бесконечно) */
+@media (min-width: 600px) {
+  .custom-btn span {
+    font-size: 14px;
+  }
   .btn-icon {
-    width: 30px; /* Базовый размер */
-    height: 30px;
-    object-fit: contain;
+    width: 40px;
+    height: 40px;
   }
+}
 
   /* --- АДАПТИВНЫЕ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ --- */
 
@@ -282,6 +304,7 @@
 
 </body>
 </html>
+
 
 
 

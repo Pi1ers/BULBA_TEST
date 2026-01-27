@@ -78,19 +78,20 @@
 
   /* Футер и кнопки */
   /* Основной блок футера */
+/* Контейнер футера */
 .bottom-buttons {
+  background: #1c1c1c; /* Темный фон для контраста */
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: space-around; /* Равномерно распределяем */
-  align-items: center;
-  background: rgba(20, 20, 20, 0.95); /* Чуть плотнее фон */
-  padding: 12px 0 25px 0; /* Больше отступа снизу для безрамочных iPhone */
-  border-top: 1px solid rgba(255, 215, 0, 0.3); /* Тонкая золотая линия сверху */
-  box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
-  z-index: 999;
+  justify-content: space-around;
+  align-items: flex-end; /* Выравнивание по низу */
+  padding: 10px 0 25px 0; /* 25px снизу важно для iOS (зона под полоской) */
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.5);
+  border-top: 2px solid gold;
+  z-index: 9999;
 }
 
 /* Кнопка */
@@ -100,63 +101,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   flex: 1;
-  color: #fff;
+  color: white;
+  padding: 5px 0;
   text-decoration: none;
-  -webkit-tap-highlight-color: transparent; /* Убираем синюю вспышку при нажатии */
+  -webkit-tap-highlight-color: transparent;
 }
 
-/* Сама ИКОНКА - теперь она привязана к ширине экрана */
+/* ИКОНКА - ПРИНУДИТЕЛЬНО КРУПНАЯ ДЛЯ ТЕЛЕГРАМА */
 .btn-icon {
-  width: 10vw;       /* 10% от ширины экрана */
-  height: 10vw;
-  max-width: 45px;   /* Чтобы на планшетах не была гигантской */
-  min-width: 35px;   /* Чтобы на маленьких не была микроскопической */
-  margin-bottom: 5px;
+  width: 48px !important;  /* Увеличили значительно */
+  height: 48px !important;
+  margin-bottom: 6px;
   object-fit: contain;
+  filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.2)); /* Легкое свечение */
 }
 
-/* ТЕКСТ под иконкой */
+/* ТЕКСТ ПОД ИКОНКОЙ */
 .custom-btn span {
-  font-size: 3.2vw;    /* Текст тоже зависит от ширины экрана */
-  font-weight: 600;
+  font-size: 13px !important; /* Четкий читаемый шрифт */
+  font-weight: 800; /* Очень жирный */
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
+  white-space: nowrap; /* Чтобы не переносился */
 }
 
-/* Ограничитель для очень больших экранов (чтобы не растягивалось бесконечно) */
-@media (min-width: 600px) {
-  .custom-btn span {
-    font-size: 14px;
-  }
+/* Фикс для очень маленьких экранов (чтобы не слипались) */
+@media (max-width: 350px) {
   .btn-icon {
-    width: 40px;
-    height: 40px;
+    width: 38px !important;
+    height: 38px !important;
+  }
+  .custom-btn span {
+    font-size: 10px !important;
   }
 }
 
-  /* --- АДАПТИВНЫЕ СТИЛИ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ --- */
 
-  /* Общие стили для телефонов (до 600px) */
-  @media (max-width: 600px) {
-    /* Монета становится больше */
-    #coin {
-      width: 80vw;
-      height: 80vw;
-    }
-    
-    /* Иконки в футере увеличиваются */
-    .btn-icon {
-      width: 40px;
-      height: 40px;
-    }
-    
-    /* Текст в футере становится крупнее */
-    .custom-btn span {
-      font-size: 12px;
-      font-weight: bold;
-    }
-  }
 </style>
 
 </head>
@@ -304,6 +286,7 @@
 
 </body>
 </html>
+
 
 
 

@@ -1,34 +1,21 @@
-// 1. Конфиг Firebase
-var firebaseConfig = {
-    apiKey: "AIzaSyAGExfz8xyabDdFwy7PCYg1ub251S9fCDg",
-    authDomain: "bulbacoin.firebaseapp.com",
-    projectId: "bulbacoin",
-    storageBucket: "bulbacoin.firebasestorage.app",
-    messagingSenderId: "815317813546",
-    appId: "1:815317813546:web:a9355f4cf7d6c23a623653",
-    databaseURL: "https://bulbacoin-default-rtdb.europe-west1.firebasedatabase.app"
-};
 
-// 2. Инициализация (с проверкой)
-if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(firebaseConfig);
-}
-var db = firebase.database();
-var tg = window.Telegram.WebApp;
-var userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "test_user_1";
 
-// 3. Переменные игры (используем var для глобального доступа)
+// Глобальные переменные игры (без БД начинаем с нуля)
 var clickCount = 0;
 var energy = 100;
-var level = 0;
-var maxEnergy = 100;
-var levelCosts = [0, 0, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
+var level = 0; // Уровень 1 — это первая монета (LEVEL 0.png)
+const maxEnergy = 100;
 
-var scoreElem = document.getElementById('score');
-var coin = document.getElementById('coin');
-var energyElem = document.getElementById('energy');
+// Массив цен
+var levelCosts = [0, 50, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
 
-var coinImages = [
+// Элементы DOM
+const scoreElem = document.getElementById('score');
+const coin = document.getElementById('coin');
+const energyElem = document.getElementById('energy');
+
+// Картинки монет
+const coinImages = [
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png',
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%201.png',
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%202%20STONE_COIN.png',
@@ -42,86 +29,69 @@ var coinImages = [
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%2010%20DIAMOND_COIN.png'
 ];
 
-// 4. Функции
+// Обновление картинки монеты
 function updateCoinImage() {
-    if (coin) {
-        coin.style.backgroundImage = `url('${coinImages[level - 0]}')`;
+    if (coin && coinImages[level]) { // Убрали - 1
+        // Теперь если level = 0, возьмется coinImages[0] (LEVEL 0.png)
+        // Если level = 1, возьмется coinImages[1] (LEVEL 1.png)
+        coin.style.backgroundImage = `url('${coinImages[level]}')`;
     }
 }
 
-function updateEnergyDisplay() {
-    if (energyElem) {
-        energyElem.textContent = `⚡ ${energy}`;
-    }
-}
-
-function loadUserData() {
-    db.ref('users/' + userId).once('value').then((snapshot) => {
-        var data = snapshot.val();
-        if (data) {
-            clickCount = data.clickCount || 0;
-            level = data.level || 0;
-            energy = data.energy || 100;
-
-            scoreElem.textContent = clickCount;
-            updateCoinImage();
-            updateEnergyDisplay();
-            // Обновляем рынок, если он загружен
-            if (typeof updateCardStatuses === 'function') updateCardStatuses();
-        }
-    });
-}
-
-function saveUserData() {
-    db.ref('users/' + userId).set({
-        clickCount: clickCount,
-        level: level,
-        energy: energy,
-        userName: tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Guest"
-    });
-}
-
+// Летающий текст +1
 function createFloatingText(e) {
-    var text = document.createElement('div');
+    const text = document.createElement('div');
     text.innerText = '+1';
     text.className = 'floating-number';
-    var x = e.clientX || (e.touches && e.touches[0].clientX);
-    var y = e.clientY || (e.touches && e.touches[0].clientY);
+
+    let x, y;
+    if (e.touches && e.touches.length > 0) {
+        x = e.touches[0].clientX;
+        y = e.touches[0].clientY;
+    } else {
+        x = e.clientX;
+        y = e.clientY;
+    }
+
     text.style.left = `${x}px`;
     text.style.top = `${y}px`;
+
     document.body.appendChild(text);
     setTimeout(() => text.remove(), 800);
 }
 
+// Обработка клика
 function handlePress(e) {
     if (energy > 0) {
         clickCount++;
         energy--;
-        scoreElem.textContent = clickCount;
-        updateEnergyDisplay();
-        coin.style.transform = 'scale(0.9)';
-        setTimeout(() => coin.style.transform = 'scale(1)', 100);
+
+        // Обновляем текст
+        if(scoreElem) scoreElem.textContent = clickCount;
+        if(energyElem) energyElem.textContent = `⚡ ${energy}`;
+
+        // Анимация монеты
+        if(coin) {
+            coin.style.transform = 'scale(0.95)';
+            setTimeout(() => coin.style.transform = 'scale(1)', 100);
+        }
+
         createFloatingText(e);
-        
+
+        // Обновляем статусы в магазине (чтобы кнопка стала активной, если накопили)
+        if (typeof updateCardStatuses === 'function') updateCardStatuses();
     }
 }
 
-// Добавляем автоматическое сохранение каждые 3 секунды
-setInterval(() => {
-    saveUserData();
-}, 3000);
-
-// И сохранение при закрытии (для Telegram)
-tg.onEvent('viewportChanged', saveUserData); 
-
-// 5. Запуск
+// Регенерация энергии
 setInterval(() => {
     if(energy < maxEnergy) {
         energy++;
-        updateEnergyDisplay();
+        if(energyElem) energyElem.textContent = `⚡ ${energy}`;
     }
 }, 3000);
 
+// Навешиваем события
 if (coin) {
     coin.addEventListener('click', handlePress);
     coin.addEventListener('touchstart', (e) => {
@@ -130,8 +100,5 @@ if (coin) {
     }, { passive: false });
 }
 
+// Инициализация экрана
 updateCoinImage();
-loadUserData();
-
-
-

@@ -8,6 +8,11 @@ function switchTab(screenId) {
     if(document.getElementById(activeBtnId)) {
         document.getElementById(activeBtnId).style.opacity = '1';
     }
+
+    // ДОБАВЛЯЕМ ЭТО: Обновляем рынок при каждом заходе на него
+    if (screenId === 'screen-market' && typeof updateCardStatuses === 'function') {
+        updateCardStatuses();
+    }
 }
 
 document.getElementById('btn-farm').onclick = () => switchTab('screen-farm');

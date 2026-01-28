@@ -4,11 +4,23 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Монета с Анимацией</title>
-    <!-- Подключаем стили -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/market.css">
 </head>
 <body>
+
+    <!-- БАННЕР ПРОФИЛЯ (Один на все экраны) -->
+    <div class="user-profile">
+        <div class="avatar-slot" onclick="switchTab('screen-avatars')">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/AVATARS/старт_аватар-removebg-preview.png" id="user-avatar">
+        </div>
+        <div class="profile-info">
+            <div id="level-name">Уровень 0</div>
+            <div class="progress-container">
+                <div class="progress-bar" id="level-progress"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- ЭКРАН ФАРМА -->
     <div id="screen-farm" class="game-screen">
@@ -20,17 +32,51 @@
         <div id="energy">⚡ 100</div>
     </div>
 
-    <!-- ЭКРАН РЫНКА (Плитка) -->
-    <!-- ЭКРАН РЫНКА (Плитка) -->
-<div id="screen-market" class="game-screen" style="display: none;">
-    <h2 style="margin-top: 20px;">РЫНОК УРОВНЕЙ</h2>
+    <!-- ЭКРАН РЫНКА -->
+    <div id="screen-market" class="game-screen" style="display: none;">
+         <div class="screen-header">
+        <h2>РЫНОК УРОВНЕЙ</h2>
+        <!-- Крестик, который закрывает рынок и возвращает на фарм -->
+        <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+    </div>
     <!-- ЭТОТ КОНТЕЙНЕР ЗАПОЛНИТ JS -->
     <div class="shop-grid" id="level-shop-grid">
         <!-- Карточки появятся здесь -->
     </div>
 </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО -->
+    <!-- ЭКРАН ВЫБОРА АВАТАРА -->
+    <div id="screen-avatars" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>ВЫБЕРИ АВАТАР</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+        <div class="avatar-grid" id="avatar-selection-grid"></div>
+    </div>
+
+    <!-- ДРУГИЕ ЭКРАНЫ -->
+    <div id="screen-friends" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>ДРУЗЬЯ</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+    </div>
+
+    <div id="screen-bank" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>БАНК</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+    </div>
+
+    <div id="screen-airdrop" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>AIRDROP</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+    </div>
+
+    <!-- МОДАЛЬНОЕ ОКНО МАГАЗИНА -->
     <div id="shop-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content">
             <span class="close-modal" onclick="closeMarketModal()">&times;</span>
@@ -38,42 +84,37 @@
             <h2 id="modal-title">Название</h2>
             <p id="modal-desc">Описание товара</p>
             <p>Цена: <b id="modal-price">0</b></p>
-            <button id="modal-buy-btn" onclick="buyNextLevel()">КУПИТЬ</button>
+            <button id="modal-buy-btn">КУПИТЬ</button>
         </div>
     </div>
 
-    <!-- ДРУГИЕ ЭКРАНЫ -->
-    <div id="screen-friends" class="game-screen" style="display: none;"><h2>ДРУЗЬЯ</h2></div>
-    <div id="screen-bank" class="game-screen" style="display: none;"><h2>БАНК</h2></div>
-    <div id="screen-airdrop" class="game-screen" style="display: none;"><h2>AIRDROP</h2></div>
-
-    <!-- ФУТЕР И КНОПКИ НАВИГАЦИИ -->
+    <!-- ФУТЕР -->
     <div class="bottom-buttons">
         <button class="custom-btn" id="btn-farm">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/page%201.png" alt="Icon1" class="btn-icon">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/page%201.png" class="btn-icon">
             <span>ФАРМ</span>
         </button>
         <button class="custom-btn" id="btn-market">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" alt="Icon2" class="btn-icon">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" class="btn-icon">
             <span>РЫНОК</span>
         </button>
         <button class="custom-btn" id="btn-friends">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/друзья-removebg-preview.png" alt="Icon3" class="btn-icon">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/друзья-removebg-preview.png" class="btn-icon">
             <span>ДРУЗЬЯ</span>
         </button>
         <button class="custom-btn" id="btn-bank">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/банк-removebg-preview.png" alt="Icon4" class="btn-icon">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/банк-removebg-preview.png" class="btn-icon">
             <span>БАНК</span>
         </button>
         <button class="custom-btn" id="btn-airdrop">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/иконка_airdrop-removebg-preview.png" alt="Icon5" class="btn-icon">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/иконка_airdrop-removebg-preview.png" class="btn-icon">
             <span>AIRDROP</span>
         </button>
     </div>
 
-    <!-- Подключаем логику (ВАЖЕН ПОРЯДОК!) -->
     <script src="js/navigation.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/avatars.js"></script>
     <script src="js/market.js"></script>
 </body>
 </html>

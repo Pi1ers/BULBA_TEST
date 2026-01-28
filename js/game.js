@@ -20,7 +20,7 @@ var userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "test_user_1";
 // 3. Переменные игры (используем var для глобального доступа)
 var clickCount = 0;
 var energy = 100;
-var level = 1;
+var level = 0;
 var maxEnergy = 100;
 var levelCosts = [0, 0, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
 
@@ -60,7 +60,7 @@ function loadUserData() {
         var data = snapshot.val();
         if (data) {
             clickCount = data.clickCount || 0;
-            level = data.level || 1;
+            level = data.level || 0;
             energy = data.energy || 100;
 
             scoreElem.textContent = clickCount;
@@ -132,4 +132,5 @@ if (coin) {
 
 updateCoinImage();
 loadUserData();
+
 

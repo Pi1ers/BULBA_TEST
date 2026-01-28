@@ -9,6 +9,11 @@ const maxEnergy = 100;
 // Массив цен
 var levelCosts = [0, 50, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000];
 
+// Массив цен аватаров
+var currentAvatarIndex = 0;
+var purchasedAvatars = [0]; // Уровень 0 уже куплен
+var avatarCost = 500; // Цена любого нового аватара (или сделай массив цен)
+
 // Элементы DOM
 const scoreElem = document.getElementById('score');
 const coin = document.getElementById('coin');
@@ -28,6 +33,43 @@ const coinImages = [
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%209%20Titanium_coin.png',
     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%2010%20DIAMOND_COIN.png'
 ];
+// ПРОГРЕСС БАР/ УРОВЕНЬ И ПРОФИЛЬ
+
+function updateProgress() {
+    const nextLevel = level + 1;
+    const levelNameElem = document.getElementById('level-name');
+    const progressBar = document.getElementById('level-progress');
+    const avatarImg = document.getElementById('user-avatar');
+
+    if (levelNameElem) levelNameElem.innerText = `Уровень ${level}`;
+
+    // ИСПРАВЛЕНО: аватар берется из выбранного индекса, а не из текущего уровня
+    if (avatarImg) avatarImg.src = coinImages[currentAvatarIndex];
+
+    if (nextLevel < levelCosts.length) {
+        const targetScore = levelCosts[nextLevel];
+        let percent = (clickCount / targetScore) * 100;
+
+        if (percent >= 100) {
+            percent = 100;
+            progressBar.style.background = "#2ecc71";
+            progressBar.style.boxShadow = "0 0 10px #2ecc71";
+        } else {
+            progressBar.style.background = "linear-gradient(90deg, gold, #ffcc00)";
+            progressBar.style.boxShadow = "none";
+        }
+
+        if (progressBar) progressBar.style.width = percent + "%";
+    } else {
+        if (progressBar) {
+            progressBar.style.width = "100%";
+            progressBar.style.background = "#2ecc71";
+        }
+        if (levelNameElem) levelNameElem.innerText = "MAX LEVEL";
+    }
+}
+
+
 
 // Обновление картинки монеты
 function updateCoinImage() {
@@ -75,7 +117,7 @@ function handlePress(e) {
             coin.style.transform = 'scale(0.95)';
             setTimeout(() => coin.style.transform = 'scale(1)', 100);
         }
-
+        updateProgress()
         createFloatingText(e);
 
         // Обновляем статусы в магазине (чтобы кнопка стала активной, если накопили)
@@ -100,5 +142,12 @@ if (coin) {
     }, { passive: false });
 }
 
+
+
+
+
+
+
 // Инициализация экрана
 updateCoinImage();
+updateProgress(); // Добавили, чтобы сразу видеть уровень и аватар

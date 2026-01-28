@@ -40,27 +40,23 @@ function updateCardStatuses() {
         const titleText = card.querySelector('h3').innerText;
         const cardLevel = parseInt(titleText.replace('Уровень ', ''));
         const cost = levelCosts[cardLevel];
-
-        // Сбрасываем классы
-        card.classList.remove('bought', 'unavailable-card');
-        card.onclick = null;
+        
+        // Сбрасываем старый статус, но оставляем кликабельность
+        card.classList.remove('bought');
+        // card.onclick = () => openMarketModal(cardLevel); // Клик теперь всегда активен
 
         if (cardLevel <= level) {
-            // Уже куплено
+            // Если уровень уже куплен
             card.classList.add('bought');
             card.querySelector('.price-tag').innerText = 'КУПЛЕНО';
-        } else if (clickCount >= cost) {
-            // Можно купить
-            card.onclick = () => openMarketModal(cardLevel);
         } else {
-            // Не хватает денег
-            card.classList.add('unavailable-card');
+            // Всегда показываем цену и даем нажать на карточку
             card.querySelector('.price-tag').innerText = cost;
         }
     });
 }
 
-// Открывает модальное окно
+// Открывает модальное окно товара
 function openMarketModal(targetLevel) {
     const modal = document.getElementById('shop-modal');
     if (!modal) return;
@@ -73,17 +69,20 @@ function openMarketModal(targetLevel) {
     document.getElementById('modal-price').innerText = cost;
     document.getElementById('modal-img').src = coinImages[targetLevel - 1];
 
+    // Проверяем баланс и меняем только кнопку "Купить"
     if (clickCount >= cost) {
-        buyBtn.classList.remove('unavailable');
+        buyBtn.classList.remove('unavailable'); // Активная кнопка
         buyBtn.innerText = "КУПИТЬ";
         buyBtn.onclick = () => buyNextLevel(targetLevel);
     } else {
-        buyBtn.classList.add('unavailable');
-        buyBtn.innerText = "НЕДОСТАТОЧНО МОНЕТ";
-        buyBtn.onclick = null;
+        buyBtn.classList.add('unavailable'); // Неактивная кнопка (серая)
+        buyBtn.innerText = "НЕДОСТАТОЧНО МОНЕТ"; // Текст меняется
+        // Кнопка все еще может быть нажата, но функция buyNextLevel обработает баланс
+        buyBtn.onclick = () => buyNextLevel(targetLevel); 
     }
 
     modal.style.display = 'flex';
+    
 }
 
 function closeMarketModal() {
@@ -115,3 +114,4 @@ function buyNextLevel(targetLevel) {
         alert("Недостаточно монет!");
     }
 }
+

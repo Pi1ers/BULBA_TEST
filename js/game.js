@@ -102,9 +102,17 @@ function handlePress(e) {
         coin.style.transform = 'scale(0.9)';
         setTimeout(() => coin.style.transform = 'scale(1)', 100);
         createFloatingText(e);
-        saveUserData();
+        
     }
 }
+
+// Добавляем автоматическое сохранение каждые 3 секунды
+setInterval(() => {
+    saveUserData();
+}, 3000);
+
+// И сохранение при закрытии (для Telegram)
+tg.onEvent('viewportChanged', saveUserData); 
 
 // 5. Запуск
 setInterval(() => {
@@ -124,3 +132,4 @@ if (coin) {
 
 updateCoinImage();
 loadUserData();
+

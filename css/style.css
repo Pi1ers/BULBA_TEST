@@ -20,6 +20,7 @@ body {
     overflow: hidden;
 }
 
+
 .game-screen {
     display: flex;
     flex-direction: column;
@@ -28,6 +29,96 @@ body {
     width: 100%;
     min-height: calc(100vh - 100px);
     padding-bottom: 20px;
+}
+
+/* === ПРОФИЛЬ /УРОВЕЬ С ПРОГРЕСС БАРОМ === */
+
+.user-profile {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 15px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    z-index: 10;
+}
+
+.avatar-slot {
+    width: 40px;
+    height: 40px;
+    background: gold;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff;
+}
+
+.avatar-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+.profile-info { display: flex; flex-direction: column; gap: 4px; }
+
+#level-name {
+    font-size: 12px;
+    font-weight: bold;
+    color: gold;
+    text-transform: uppercase;
+}
+
+.progress-container {
+    width: 100px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%; /* Будет меняться через JS */
+    height: 100%;
+    background: linear-gradient(90deg, gold, #ffcc00);
+    transition: width 0.3s ease;
+}
+/* === АВАТАР И НАЖАТИЕ НА НЕГО === */
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.avatar-item {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    background-size: cover;
+}
+
+.avatar-item.active { border-color: gold; box-shadow: 0 0 15px gold; }
+.avatar-item.locked { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
+
+.avatar-item.locked::after {
+    content: "500 💰"; /* Текст цены поверх аватара */
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: white;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 5px;
+    border-radius: 5px;
+}
+
+.avatar-item {
+    position: relative; /* Нужно для позиционирования цены */
 }
 
 /* === СЧЕТ И МОНЕТА === */
@@ -116,6 +207,55 @@ body {
 @keyframes floatUp {
     0% { transform: translate(-50%, 0); opacity: 1; }
     100% { transform: translate(-50%, -150px); opacity: 0; }
+}
+
+/* === ШАПКА ЭКРАНОВ (Заголовок + Крестик) === */
+.screen-header {
+    width: 90%; /* Ширина контейнера */
+    max-width: 400px; /* Ограничиваем на больших экранах */
+    display: flex;
+    justify-content: space-between; /* Растягивает элементы по краям */
+    align-items: center;
+    margin: 20px auto; /* Центрирует сам контейнер */
+}
+
+.screen-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: gold;
+}
+
+.close-screen {
+    font-size: 35px; /* Делаем крестик большим и кликабельным */
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px 10px;
+}
+.close-screen:hover {
+    color: gold;
+    transform: scale(1.2);
+}
+
+/* Общий стиль для всех экранов (Рынок, Аватары и т.д.) */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Контент начинается сверху */
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 100px; /* Место под верхний профиль */
+    padding-bottom: 120px; /* Место над футером */
+    overflow-y: auto;
+}
+
+/* СПЕЦИАЛЬНО ДЛЯ ГЛАВНОГО ЭКРАНА (чтобы монета была по центру) */
+#screen-farm {
+    justify-content: center !important; /* Возвращаем центровку монеты */
+    padding-top: 0;
+    overflow: hidden;
 }
 
 

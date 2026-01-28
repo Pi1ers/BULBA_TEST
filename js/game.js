@@ -45,7 +45,7 @@ var coinImages = [
 // 4. Функции
 function updateCoinImage() {
     if (coin) {
-        coin.style.backgroundImage = `url('${coinImages[level - 1]}')`;
+        coin.style.backgroundImage = `url('${coinImages[level - 0]}')`;
     }
 }
 
@@ -132,5 +132,6 @@ if (coin) {
 
 updateCoinImage();
 loadUserData();
+
 
 

@@ -105,6 +105,7 @@ function buyNextLevel(targetLevel) {
         closeModal();
         updateCardStatuses();
         switchTab('screen-farm'); // Возвращаем на экран фарма
+        saveUserData();
         alert(`Поздравляю! Уровень ${level} активирован!`);
     } else {
         alert("Недостаточно монет!");

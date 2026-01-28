@@ -1,7 +1,54 @@
-let clickCount = 0;
-let energy = 100;
-let level = 1;
+// Инициализация Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyAGExfz8xyabDdFwy7PCYg1ub251S9fCDg",
+    authDomain: "bulbacoin.firebaseapp.com",
+    projectId: "bulbacoin",
+    storageBucket: "bulbacoin.firebasestorage.app",
+    messagingSenderId: "815317813546",
+    appId: "1:815317813546:web:a9355f4cf7d6c23a623653",
+    databaseURL: "https://bulbacoin-default-rtdb.europe-west1.firebasedatabase.app" // Пример: https://bulbacoin-default-rtdb.europe-west1.firebasedatabase.app
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Получаем данные из Telegram
+const tg = window.Telegram.WebApp;
+const userId = tg.initDataUnsafe.user ? tg.initDataUnsafe.user.id : "test_user_1"; // Если открыли не в ТГ, будет тестовый ID
+
+// Глобальные переменные игры
+var clickCount = 0;
+var energy = 100;
+var level = 1;
 const maxEnergy = 100;
+
+// Загрузка данных из Firebase при старте
+function loadUserData() {
+    db.ref('users/' + userId).once('value').then((snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            clickCount = data.clickCount || 0;
+            level = data.level || 1;
+            energy = data.energy || 100;
+
+            // Обновляем экран
+            scoreElem.textContent = clickCount;
+            updateCoinImage();
+            updateEnergyDisplay();
+            if (typeof updateCardStatuses === 'function') updateCardStatuses();
+        }
+    });
+}
+
+// Сохранение данных (вызываем при клике и покупке)
+function saveUserData() {
+    db.ref('users/' + userId).set({
+        clickCount: clickCount,
+        level: level,
+        energy: energy,
+        userName: tg.initDataUnsafe.user ? tg.initDataUnsafe.user.first_name : "Guest"
+    });
+}
 
 // Массив цен здесь, чтобы его видели все файлы
 var levelCosts = [0, 0, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000, 100000]
@@ -64,6 +111,8 @@ function handlePress(e) {
         setTimeout(() => coin.style.transform = 'scale(1)', 100);
 
         createFloatingText(e);
+        saveUserData();
+
     }
 }
 
@@ -85,3 +134,5 @@ if (coin) {
 }
 
 updateCoinImage();
+// Вызови loadUserData() в самом конце game.js или при загрузке страницы
+loadUserData();

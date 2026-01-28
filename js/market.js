@@ -1,4 +1,4 @@
-// Запуск при загрузке страницы
+// Функция запускается только когда страница полностью загружена
 window.addEventListener('load', () => {
     generateShopCards();
 });
@@ -6,23 +6,22 @@ window.addEventListener('load', () => {
 // Генерирует все карточки на рынке
 function generateShopCards() {
     const grid = document.getElementById('level-shop-grid');
-    
-    // Проверка наличия сетки и данных
-    if (!grid) return;
-    if (typeof levelCosts === 'undefined' || typeof coinImages === 'undefined') return;
+    if (!grid || typeof levelCosts === 'undefined' || typeof coinImages === 'undefined') {
+        console.error("Данные игры не загружены!");
+        return;
+    }
 
     grid.innerHTML = '';
 
-    // Цикл по уровням со 2 по 10
-    for (let i = 2; i < levelCosts.length; i++) {
+    // Начинаем с i = 0, чтобы сгенерировать все 11 карточек
+    for (let i = 0; i < levelCosts.length; i++) {
         const cost = levelCosts[i];
-        const imageUrl = coinImages[i - 1];
+        const imageUrl = coinImages[i];
 
         const card = document.createElement('div');
         card.className = 'shop-card';
-
-         // ДОБАВЛЯЕМ КЛИК:
-        card.onclick = () => openMarketModal(targetLevel);
+        // Привязываем клик (он будет отключен для level 0 в updateCardStatuses)
+        card.onclick = () => openMarketModal(i);
 
         card.innerHTML = `
             <img src="${imageUrl}" alt="Уровень ${i}">
@@ -31,69 +30,62 @@ function generateShopCards() {
         `;
         grid.appendChild(card);
     }
-    updateCardStatuses(); 
+    updateCardStatuses();
 }
 
 // Обновляет статус карточек (куплено/доступно/недоступно)
 function updateCardStatuses() {
     const cards = document.querySelectorAll('.shop-card');
-    if (!cards.length) return;
-
     cards.forEach(card => {
         const titleText = card.querySelector('h3').innerText;
         const cardLevel = parseInt(titleText.replace('Уровень ', ''));
-        const cost = levelCosts[cardLevel];
-        
-        // Сбрасываем старый статус, но оставляем кликабельность
+
         card.classList.remove('bought');
-        // card.onclick = () => openMarketModal(cardLevel); // Клик теперь всегда активен
 
         if (cardLevel <= level) {
-            // Если уровень уже куплен
+            // Если уровень уже куплен (включая стартовый 0)
             card.classList.add('bought');
             card.querySelector('.price-tag').innerText = 'КУПЛЕНО';
+            card.onclick = null; // Делаем некликабельным
         } else {
-            // Всегда показываем цену и даем нажать на карточку
+             // Все остальные уровни показываем с ценой и делаем кликабельными
+            const cost = levelCosts[cardLevel];
             card.querySelector('.price-tag').innerText = cost;
+            card.onclick = () => openMarketModal(cardLevel);
         }
     });
 }
 
 // Открывает модальное окно товара
 function openMarketModal(targetLevel) {
+     // Добавляем защиту: если куплено, не открываем модалку
+    if (targetLevel <= level) return;
+
     const modal = document.getElementById('shop-modal');
-     // 1. Проверяем, существует ли модалка вообще
     if (!modal) return;
 
-    // 2. Проверяем, не куплен ли уже этот уровень
-    if (targetLevel <= level) {
-        // Вместо alert можно просто ничего не делать или вывести сообщение
-        console.log("Уровень уже освоен");
-        return;
-    }
-
+    // ... (остальной код модалки без изменений) ...
     const cost = levelCosts[targetLevel];
     const buyBtn = document.getElementById('modal-buy-btn');
 
     document.getElementById('modal-title').innerText = `Купить уровень ${targetLevel}`;
     document.getElementById('modal-desc').innerText = `Разблокирует новый дизайн монеты!`;
     document.getElementById('modal-price').innerText = cost;
-    document.getElementById('modal-img').src = coinImages[targetLevel - 1];
+    document.getElementById('modal-img').src = coinImages[targetLevel];
 
-    // Проверяем баланс и меняем только кнопку "Купить"
     if (clickCount >= cost) {
-        buyBtn.classList.remove('unavailable'); // Активная кнопка
+        buyBtn.disabled = false;
         buyBtn.innerText = "КУПИТЬ";
+        buyBtn.style.opacity = "1";
         buyBtn.onclick = () => buyNextLevel(targetLevel);
     } else {
-        buyBtn.classList.add('unavailable'); // Неактивная кнопка (серая)
-        buyBtn.innerText = "НЕДОСТАТОЧНО МОНЕТ"; // Текст меняется
-        // Кнопка все еще может быть нажата, но функция buyNextLevel обработает баланс
-        buyBtn.onclick = () => buyNextLevel(targetLevel); 
+        buyBtn.disabled = true;
+        buyBtn.innerText = "МАЛО КАРТОШКИ";
+        buyBtn.style.opacity = "0.5";
+        buyBtn.onclick = null;
     }
 
     modal.style.display = 'flex';
-    
 }
 
 function closeMarketModal() {
@@ -106,24 +98,15 @@ function buyNextLevel(targetLevel) {
     if (clickCount >= cost) {
         clickCount -= cost;
         level = targetLevel;
-        
-        // Обновляем UI в game.js
+
         if (typeof scoreElem !== 'undefined') scoreElem.textContent = clickCount;
         if (typeof updateCoinImage === 'function') updateCoinImage();
-        
+
         closeMarketModal();
         updateCardStatuses();
-        
-        // Сохраняем в Firebase
-        if (typeof saveUserData === 'function') saveUserData();
-        
-        // Если функция switchTab существует (в navigation.js)
+
         if (typeof switchTab === 'function') switchTab('screen-farm');
-        
-        alert(`Поздравляю! Уровень ${level} активирован!`);
-    } else {
-        alert("Недостаточно монет!");
+
+        alert(`Уровень ${level} разблокирован!`);
     }
 }
-
-

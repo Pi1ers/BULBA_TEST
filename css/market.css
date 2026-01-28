@@ -67,17 +67,7 @@
     background: gold; border: none; padding: 12px; border-radius: 10px;
     width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer;
 }
-/* Стиль для кнопки, если монет не хватает */
-.shop-card.unavailable-card {
-    opacity: 0.5;
-    border-color: gray;
-    cursor: not-allowed;
-    pointer-events: none; /* Нельзя нажать */
-}
 
-.shop-card.unavailable-card .price-tag {
-    color: gray !important;
-}
 
 /* Если товар уже куплен */
 .shop-card.bought {
@@ -90,3 +80,4 @@
     color: gray;
     font-size: 10px;
 }
+

@@ -8,7 +8,13 @@ function switchTab(screenId) {
     if(document.getElementById(activeBtnId)) {
         document.getElementById(activeBtnId).style.opacity = '1';
     }
+
+    // ДОБАВЛЯЕМ: Если заходим на экран аватаров, отрисовываем их
+    if (screenId === 'screen-avatars' && typeof renderAvatarSelection === 'function') {
+        renderAvatarSelection();
+    }
 }
+
 
 document.getElementById('btn-farm').onclick = () => switchTab('screen-farm');
 document.getElementById('btn-market').onclick = () => switchTab('screen-market');

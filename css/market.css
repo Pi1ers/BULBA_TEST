@@ -68,6 +68,7 @@
     width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer;
 }
 
+}
 
 /* Если товар уже куплен */
 .shop-card.bought {
@@ -80,4 +81,3 @@
     color: gray;
     font-size: 10px;
 }
-

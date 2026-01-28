@@ -21,6 +21,9 @@ function generateShopCards() {
         const card = document.createElement('div');
         card.className = 'shop-card';
 
+         // ДОБАВЛЯЕМ КЛИК:
+        card.onclick = () => openMarketModal(targetLevel);
+
         card.innerHTML = `
             <img src="${imageUrl}" alt="Уровень ${i}">
             <h3>Уровень ${i}</h3>
@@ -59,7 +62,15 @@ function updateCardStatuses() {
 // Открывает модальное окно товара
 function openMarketModal(targetLevel) {
     const modal = document.getElementById('shop-modal');
+     // 1. Проверяем, существует ли модалка вообще
     if (!modal) return;
+
+    // 2. Проверяем, не куплен ли уже этот уровень
+    if (targetLevel <= level) {
+        // Вместо alert можно просто ничего не делать или вывести сообщение
+        console.log("Уровень уже освоен");
+        return;
+    }
 
     const cost = levelCosts[targetLevel];
     const buyBtn = document.getElementById('modal-buy-btn');
@@ -114,4 +125,5 @@ function buyNextLevel(targetLevel) {
         alert("Недостаточно монет!");
     }
 }
+
 

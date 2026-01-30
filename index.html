@@ -4,8 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Монета с Анимацией</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/market.css">
+    <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/game.css">
+<link rel="stylesheet" href="css/ui-elements.css">
+<link rel="stylesheet" href="css/market.css">
+<link rel="stylesheet" href="css/levels.css">
+<link rel="stylesheet" href="css/bank.css">
 </head>
 <body>
 
@@ -16,10 +20,12 @@
         </div>
         <div class="profile-info">
             <div id="level-name">Уровень 0</div>
-            <div class="progress-container">
-                <div class="progress-bar" id="level-progress"></div>
-            </div>
+                <!-- Добавляем onclick и стиль курсора сюда -->
+                <div class="progress-container" onclick="switchTab('screen-levels')" style="cursor: pointer;">
+                    <div class="progress-bar" id="level-progress"></div>
+                </div>
         </div>
+
     </div>
 
     <!-- ЭКРАН ФАРМА -->
@@ -30,20 +36,61 @@
         </div>
         <div id="coin"></div>
         <div id="energy">⚡ 100</div>
+            <div id="farm-box" onclick="collectFarm()">
+
+                <div id="farm-storage-text">📦 0</div>
+                <span>ЗАБРАТЬ</span>
+            </div>
     </div>
 
     <!-- ЭКРАН РЫНКА -->
-    <div id="screen-market" class="game-screen" style="display: none;">
-         <div class="screen-header">
-        <h2>РЫНОК УРОВНЕЙ</h2>
-        <!-- Крестик, который закрывает рынок и возвращает на фарм -->
+<div id="screen-market" class="game-screen" style="display: none;">
+    <div class="screen-header">
+        <h2>МАГАЗИН</h2>
         <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
     </div>
-    <!-- ЭТОТ КОНТЕЙНЕР ЗАПОЛНИТ JS -->
-    <div class="shop-grid" id="level-shop-grid">
-        <!-- Карточки появятся здесь -->
+
+    <!-- Добавили третью кнопку -->
+    <div class="market-tabs">
+        <button class="tab-btn active" onclick="showMarketTab('levels')">МОНЕТЫ</button>
+        <button class="tab-btn" onclick="showMarketTab('boosts')">УЛУЧШЕНИЯ</button>
+        <button class="tab-btn" onclick="showMarketTab('backgrounds')">ФОНЫ</button>
+    </div>
+
+    <!-- Сетка Дизайнов -->
+    <div class="shop-grid" id="level-shop-grid"></div>
+
+    <!-- Сетка Улучшений -->
+    <div class="shop-grid" id="boost-shop-grid" style="display: none;"></div>
+      <!-- НОВАЯ Сетка Фонов -->
+    <div class="shop-grid" id="bg-shop-grid" style="display: none;"></div>
+</div>
+
+<!-- МОДАЛЬНОЕ ОКНО -->
+<div id="shop-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeMarketModal()">&times;</span>
+        <img id="modal-img" src="" alt="item">
+        <h2 id="modal-title">Название</h2>
+        <p id="modal-desc">Описание товара</p>
+        <p>Цена: <b id="modal-price">0</b></p>
+        <button id="modal-buy-btn">КУПИТЬ</button>
     </div>
 </div>
+   <!-- ЭКРАН РЫНКА -->
+
+        <!-- ЭКРАН достижений -->
+    <div id="screen-achievements" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>ДОСТИЖЕНИЯ</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+        <div id="achievements-list" class="shop-grid">
+            <!-- Сюда JS будет отрисовывать ачивки -->
+        </div>
+    </div>
+
+
 
     <!-- ЭКРАН ВЫБОРА АВАТАРА -->
     <div id="screen-avatars" class="game-screen" style="display: none;">
@@ -52,6 +99,16 @@
             <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
         </div>
         <div class="avatar-grid" id="avatar-selection-grid"></div>
+    </div>
+    <!-- ЭКРАН ПУТИ УРОВНЕЙ -->
+    <div id="screen-levels" class="game-screen" style="display: none;">
+        <div class="screen-header">
+            <h2>ПУТЬ БУЛЬБЫ</h2>
+            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+        </div>
+        <div id="levels-roadmap" class="levels-list">
+            <!-- Сюда JS отрисует уровни -->
+        </div>
     </div>
 
     <!-- ДРУГИЕ ЭКРАНЫ -->
@@ -62,12 +119,42 @@
         </div>
     </div>
 
-    <div id="screen-bank" class="game-screen" style="display: none;">
-        <div class="screen-header">
-            <h2>БАНК</h2>
-            <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+    <!-- ЭКРАН БАНКА -->
+<div id="screen-bank" class="game-screen" style="display: none;">
+    <div class="screen-header">
+        <h2>БУЛЬБА БАНК</h2>
+        <span class="close-screen" onclick="switchTab('screen-farm')">&times;</span>
+    </div>
+
+    <!-- Вкладки Банка -->
+    <div class="market-tabs">
+        <button class="tab-btn active" onclick="showBankTab('deposit')">ВКЛАД</button>
+        <button class="tab-btn" onclick="showBankTab('bonus')">БОНУС-КОДЫ</button>
+    </div>
+
+    <!-- Секция Вклада -->
+    <div class="bank-section" id="bank-deposit-section">
+        <h3>Депозит 8 часов</h3>
+        <p>Положите картошку и заберите через 8 часов с +50% прибылью.</p>
+        <input type="number" id="deposit-amount" placeholder="Введите сумму">
+        <button onclick="startDeposit()" disabled>ВЛОЖИТЬ</button>
+
+        <!-- Заглушка активного вклада -->
+        <div class="deposit-active-placeholder" style="display: none;">
+            <p>Ваш вклад активен.</p>
+            <p id="deposit-timer">Осталось времени: 07:59:59</p>
+            <button disabled>ЗАБРАТЬ (Позже)</button>
         </div>
     </div>
+
+    <!-- Секция Бонус-кодов -->
+    <div class="bank-section" id="bank-bonus-section" style="display: none;">
+        <h3>Активация Бонус-кода</h3>
+        <p>Есть секретный код от разработчиков? Введи его здесь!</p>
+        <input type="text" id="bonus-code-input" placeholder="Введите код">
+        <button onclick="activateBonusCode()">АКТИВИРОВАТЬ</button>
+    </div>
+</div>
 
     <div id="screen-airdrop" class="game-screen" style="display: none;">
         <div class="screen-header">
@@ -76,44 +163,52 @@
         </div>
     </div>
 
-    <!-- МОДАЛЬНОЕ ОКНО МАГАЗИНА -->
-    <div id="shop-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeMarketModal()">&times;</span>
-            <img id="modal-img" src="" alt="item">
-            <h2 id="modal-title">Название</h2>
-            <p id="modal-desc">Описание товара</p>
-            <p>Цена: <b id="modal-price">0</b></p>
-            <button id="modal-buy-btn">КУПИТЬ</button>
-        </div>
-    </div>
+
 
     <!-- ФУТЕР -->
     <div class="bottom-buttons">
-        <button class="custom-btn" id="btn-farm">
+        <button class="custom-btn" id="btn-farm" onclick="switchTab('screen-farm')">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/page%201.png" class="btn-icon">
             <span>ФАРМ</span>
         </button>
-        <button class="custom-btn" id="btn-market">
+        <button class="custom-btn" id="btn-market" onclick="switchTab('screen-market')">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/РЫНОК-removebg-preview.png" class="btn-icon">
             <span>РЫНОК</span>
         </button>
-        <button class="custom-btn" id="btn-friends">
+         <button class="custom-btn" id="btn-friends" onclick="switchTab('screen-friends')">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/друзья-removebg-preview.png" class="btn-icon">
             <span>ДРУЗЬЯ</span>
         </button>
-        <button class="custom-btn" id="btn-bank">
+        <button class="custom-btn" id="btn-bank" onclick="switchTab('screen-bank')">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/банк-removebg-preview.png" class="btn-icon">
             <span>БАНК</span>
         </button>
-        <button class="custom-btn" id="btn-airdrop">
+         <button class="custom-btn" id="btn-achievements" onclick="switchTab('screen-achievements')">
+            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/ачивки-removebg-preview.png" class="btn-icon">
+            <span>АЧИВКИ</span>
+        </button>
+        <button class="custom-btn" id="btn-airdrop" onclick="switchTab('screen-airdrop')">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/ICON%20footer%20BUTTON/иконка_airdrop-removebg-preview.png" class="btn-icon">
             <span>AIRDROP</span>
         </button>
     </div>
-
-    <script src="js/navigation.js"></script>
+    <div id="level-up-modal" class="level-overlay" style="display: none;">
+    <div class="level-card">
+        <div class="sun-rays"></div>
+        <h1 class="level-title">НОВЫЙ УРОВЕНЬ!</h1>
+        <!-- Убедись, что эти ID ТОЧНО совпадают -->
+        <div class="level-number" id="new-lvl-num">5</div>
+        <p class="level-reward">Награда: <span id="lvl-reward-amt">+1000</span> 🥔</p>
+        <button class="level-btn" onclick="closeLevelModal()">КРУТО!</button>
+    </div>
+</div>
+    <!-- Сначала данные -->
+    <script src="js/constants.js"></script>
+    <script src="js/achievements.js"></script>
+    <!-- логика -->
     <script src="js/game.js"></script>
+     <script src="js/bank.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/avatars.js"></script>
     <script src="js/market.js"></script>
 </body>

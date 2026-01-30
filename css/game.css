@@ -1,0 +1,90 @@
+#screen-farm {
+    justify-content: center !important;
+    padding-top: 0;
+    overflow: hidden;
+}
+
+/* МОНЕТА И СЧЕТ */
+.score-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: -10vh;
+    margin-bottom: 20px;
+}
+.score-wrapper img { width: 50px; }
+#score { font-size: 2.5em; font-weight: bold; }
+
+#coin {
+    width: 250px !important;
+    height: 250px !important;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+    z-index: 5;
+}
+
+#energy {
+    position: fixed;
+    bottom: 120px;
+    left: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00ffcc;
+}
+
+
+/* ЯЩИК ФЕРМЫ */
+#farm-box {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 120px; /* Приподняли над футером (90-100px) */
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid gold;
+    border-radius: 15px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: transform 0.1s;
+    color: white;
+    font-family: sans-serif;
+}
+
+#farm-box:active {
+    transform: scale(0.9); /* Эффект нажатия */
+}
+
+#farm-storage-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+#farm-box span {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: gold;
+}
+
+/* === АНИМАЦИЯ ЦИФР (ВЫЛЕТАЮЩИЕ +1) === */
+.floating-number {
+    position: fixed; /* Вырывает из потока, чтобы не двигать монету */
+    pointer-events: none;
+    color: gold;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 10000;
+    animation: floatUp 0.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -150px); opacity: 0; }
+}

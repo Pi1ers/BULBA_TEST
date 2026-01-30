@@ -1,0 +1,110 @@
+/* БАЗОВЫЕ СТИЛИ */
+
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+body {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    padding-bottom: 20px;
+}
+
+
+/* ФУТЕР И КНОПКИ */
+.bottom-buttons {
+    background: rgba(34, 34, 34, 0.8);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    box-shadow: 0 -5px 15px gold;
+    z-index: 1000;
+}
+
+.custom-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.custom-btn:active { transform: scale(0.9); }
+.btn-icon { width: 30px; height: 30px; margin-bottom: 5px; }
+
+/* ШАПКА ЭКРАНОВ */
+.screen-header {
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px auto;
+}
+
+.screen-header h2 { margin: 0; font-size: 1.5rem; color: gold; }
+
+.close-screen {
+    font-size: 35px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    padding: 5px 10px;
+    transition: transform 0.2s;
+}
+.close-screen:hover { color: gold; transform: scale(1.2); }
+
+/* ОБЩИЙ СТИЛЬ ЭКРАНОВ */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 120px;
+    overflow-y: auto;
+}
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 600px) {
+    .bottom-buttons { padding: 10px 0 25px 0; justify-content: space-around; }
+    .btn-icon { width: 35px !important; height: 35px !important; }
+    .custom-btn span { font-size: 11px !important; }
+    #coin { width: 200px !important; height: 200px !important; }
+}

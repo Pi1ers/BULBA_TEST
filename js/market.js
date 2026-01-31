@@ -176,16 +176,36 @@ function generateBoostCards() {
     if (!grid) return;
     grid.innerHTML = '';
 
-    // БЕЗОПАСНОЕ ПОЛУЧЕНИЕ ЦЕНЫ (если массива нет, ошибки не будет)
-    let currentPrice = "MAX";
+
+    // Для Авто-фермы
+       // Твои "безопасные" переменные выше (убедись, что они такие):
+    let farmPrice = "MAX";
     if (typeof autoFarmCosts !== 'undefined' && autoFarmLevel < autoFarmCosts.length) {
-        currentPrice = autoFarmCosts[autoFarmLevel];
+        farmPrice = autoFarmCosts[autoFarmLevel];
     }
 
+    let cloverPrice = "MAX";
+    if (typeof cloverCosts !== 'undefined' && cloverLevel < cloverCosts.length) {
+        cloverPrice = cloverCosts[cloverLevel];
+    }
+
+    let honeyPrice = "MAX";
+    if (typeof honeyCosts !== 'undefined' && honeyLevel < honeyCosts.length) {
+        honeyPrice = honeyCosts[honeyLevel];
+    }
+    let storagePrice = "MAX";
+    if (typeof storageUpgradeCosts !== 'undefined' && storageLevel < storageUpgradeCosts.length) {
+    storagePrice = storageUpgradeCosts[storageLevel];
+}
+
+    // ВОТ ТУТ ОШИБКА: проверь, чтобы везде стояли правильные названия
     const boosts = [
-        { id: 'click', name: 'СИЛА КЛИКА', desc: `+1 к клику. Сейчас: ${clickPower}`, price: boostClickCost, icon: '🎯' },
-        { id: 'energy', name: 'ЗАПАС ЭНЕРГИИ', desc: `+50 к макс. Сейчас: ${maxEnergy}`, price: boostEnergyCost, icon: '⚡' },
-        { id: 'autofarm', name: 'АВТО-ФЕРМА', desc: `+1 к/сек. Уровень: ${autoFarmLevel}`, price: currentPrice, icon: '🚜' }
+        { id: 'click', name: 'СИЛА КЛИКА', desc: `Урон: ${clickPower}`, price: boostClickCost, icon: '🎯' },
+        { id: 'energy', name: 'ЗАПАС ЭНЕРГИИ', desc: `Макс: ${maxEnergy}`, price: boostEnergyCost, icon: '⚡' },
+        { id: 'autofarm', name: 'АВТО-ФЕРМА', desc: `Ур: ${autoFarmLevel}`, price: farmPrice, icon: '🚜' }, // БЫЛО currentPrice
+        { id: 'clover', name: 'КЛЕВЕР УДАЧИ', desc: `Шанс: ${Math.round(criticalChance * 100)}%`, price: cloverPrice, icon: '🍀' },
+        { id: 'honey', name: 'БОЧКА МЁДА', desc: `Реген: +${energyRegenSpeed}`, price: honeyPrice, icon: '🍯' },
+        { id: 'storage', name: 'СКЛАД БУЛЬБЫ', desc: `Лимит: ${storageMax}`, price: storagePrice, icon: '🛖' }
     ];
 
     boosts.forEach(boost => {
@@ -239,6 +259,29 @@ function buyBoost(type) {
         boostEnergyCost = Math.round(boostEnergyCost * 1.5);
         saveGame()
     }
+    else if (type === 'clover') {
+    if (cloverLevel < cloverCosts.length) {
+        const currentCost = cloverCosts[cloverLevel];
+
+        if (clickCount >= currentCost) {
+            clickCount -= currentCost;
+            cloverLevel++; // Повышаем уровень
+            criticalChance += 0.05; // Повышаем шанс
+            saveGame();
+        } else {
+            alert("Маловато картошки!");
+        }
+    } else {
+        alert("Максимальный уровень удачи!");
+    }
+}
+    else if (type === 'honey' && clickCount >= honeyCost) {
+        clickCount -= honeyCost;
+        energyRegenSpeed += 1; // Увеличиваем силу регена
+        honeyCost = Math.round(honeyCost * 2.5);
+        saveGame();
+}
+
     // И ДОБАВЛЕН ПРОБЕЛ ЗДЕСЬ
     else if (type === 'autofarm') {
         // Проверяем, есть ли еще доступные цены в массиве
@@ -259,10 +302,27 @@ function buyBoost(type) {
             return; // Максимальный уровень достигнут
         }
     }
+
+    else if (type === 'storage') {
+    if (storageLevel < storageUpgradeCosts.length) {
+        let price = storageUpgradeCosts[storageLevel];
+        if (clickCount >= price) {
+            clickCount -= price;
+            storageLevel++;
+            // Обновляем текущий лимит из массива
+            storageMax = storageMaxValues[storageLevel];
+            saveGame();
+            generateBoostCards();
+            updateStorageUI(); // Чтобы цифры сразу сменились на 0 / 5000
+        }
+    }
+}
+
     // ИЛИ ВОТ ТУТ
     else {
         return;
     }
+
 
     // Общие действия после любой успешной покупки
     if (typeof scoreElem !== 'undefined') scoreElem.textContent = clickCount;

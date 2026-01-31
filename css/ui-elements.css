@@ -1,17 +1,6 @@
+
 /* ВЕРХНЯЯ ПАНЕЛЬ ПРОФИЛЯ */
-.user-profile {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.4);
-    padding: 8px 15px;
-    border-radius: 50px;
-    border: 1px solid rgba(255, 215, 0, 0.3);
-    z-index: 10;
-}
+
 
 .avatar-slot {
     width: 40px;
@@ -86,26 +75,40 @@
 
 
 #level-name {
-    font-size: 12px;
+    font-size: 10px; /* Чуть меньше, чтобы влезло в шапку */
     font-weight: bold;
-    color: gold;
+    color: #aaa; /* Серый, чтобы золото полоски выделялось */
     text-transform: uppercase;
+    margin-bottom: 2px;
 }
 
 .progress-container {
     width: 100px;
-    height: 6px;
-    background: rgba(255, 255, 255, 0.2);
+    height: 8px; /* Чуть толще для видимости RGB */
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
     overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* Сама RGB полоска */
 .progress-bar {
-    width: 0%; /* Будет меняться через JS */
+    width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, gold, #ffcc00);
+    /* Красивый RGB градиент */
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+    background-size: 200% 100%;
+    animation: rgb-flow 3s linear infinite; /* Плавное перетекание цветов */
     transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
+
+/* Анимация перелива цветов */
+@keyframes rgb-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
 
 /* ******************  модальное окно нового уровня LEVEL UP АНИМАЦИЯ */
 .level-overlay {

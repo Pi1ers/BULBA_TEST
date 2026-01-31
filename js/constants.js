@@ -1,6 +1,27 @@
 var boostClickCost = 150;
 var boostEnergyCost = 200;
 
+var criticalChance = 0.1; // Шанс крита (10%)
+var energyRegenSpeed = 1;  // Сколько энергии восстановится за тик
+var energyRegenInterval = 3000; // Раз в 3 секунды (по умолчанию)
+
+// Цены для новых бустов
+var cloverCosts = [500, 1500, 5000, 15000, 50000]; // 5 уровней прокачки
+var cloverLevel = 0; // Начинаем с нулевого индекса (цена 500)
+
+var honeyCosts = [1000, 3000, 7000, 15000, 40000]; // Сделаем и меду массив для порядка
+var honeyLevel = 0;
+
+var storageMaxValues = [1000, 5000, 10000, 50000, 100000];
+var storageLevel = 0; // Текущий уровень прокачки склада
+var storageMax = storageMaxValues[storageLevel]; // Текущий лимит
+
+// Цены улучшения склада
+var storageUpgradeCosts = [2000, 10000, 25000, 75000];
+
+
+
+
 /////////////     МАССИВ ДЛЯ АВАТАРОВ //////////////
 const avatarData = [
     { id: 0, price: 0,   reqLvl: 0,  url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/AVATARS/старт_аватар-removebg-preview.png' }, // Бесплатный
@@ -19,9 +40,9 @@ const levelCosts = [0, 500, 1000, 2500, 5000, 25000, 50000, 100000, 205000, 5000
 const coinSkinsData = [
     { name: 'Разбитая монета.', desc: 'Стартовый скин, пахнет землей.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%200.png' },
     { name: 'Медная Бульба', desc: 'Блестит на солнце, тяжелая.', url:     'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%201.png', },
-    { name: 'Каменная Бульба', desc: 'Очень прочная, но дешевая.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%202%20STONE_COIN.png', },
+    { name: 'Каменная Бульба', desc: 'Очень прочная, но дешевая.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/AVATARS/NEWCOINTEST.png', },
     { name: 'Глиняная Бульба', desc: 'Хрупкая, но красивая.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%203%20CLAY_COIN.png' , },
-    { name: 'Спортивный костюм', desc: 'На спорте.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/AVATARS/NEWCOINTEST.png' , },
+    { name: 'Железная Бульба', desc: 'Настоящая мощь индустрии.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%204%20IRON_BULBA.png' , },
     { name: 'Медная Бульба', desc: 'Классика чеканки.', url:  'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%205%20Copper_COIN.png' , },
     { name: 'Бронзовая Бульба', desc: 'Сплав опыта и упорства.', url:  'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%206%20Broize_coin.png', },
     { name: 'Серебряная Бульба', desc: 'Сияет как полная луна.', url: 'https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/LEVEL%207%20Silver_coin.png' ,},
@@ -114,4 +135,3 @@ const levelsData = [
     { lvl: 49, name: "Картофельная Сингулярность", xpRequired: 500000000, reward: 10000000 },
     { lvl: 50, name: "АБСОЛЮТНАЯ БУЛЬБА", xpRequired: 1000000000, reward: 1000000000 }
 ];
-

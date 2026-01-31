@@ -61,26 +61,38 @@ function addXP(amount) {
 }
 
 function updateProgress() {
+    // 1. Ищем только те элементы, которые реально остались на экране
     const levelNameElemLocal = document.getElementById('level-name');
     const progressBarLocal = document.getElementById('level-progress');
 
+    // Если нет даже названия уровня — выходим, чтобы не плодить ошибки
     if (!levelNameElemLocal) return;
 
-    // Ищем данные текущего уровня
+    // 2. Берем данные текущего и следующего уровней из constants.js
     const currentLevelData = levelsData.find(l => l.lvl === userLevel);
-    // Ищем данные СЛЕДУЮЩЕГО уровня для полоски
     const nextLevelData = levelsData.find(l => l.lvl === userLevel + 1);
 
-    // ВАЖНО: Оставляем ТОЛЬКО название и уровень в скобках
+    // 3. Обновляем текст уровня (название + номер)
     const name = currentLevelData ? currentLevelData.name : "Копатель";
-    levelNameElemLocal.innerText = `${name} (${userLevel}  УР.)`;
+    levelNameElemLocal.innerText = `${name} (${userLevel} УР.)`;
 
-    // Полоска остается чисто визуальной
-    if (progressBarLocal && nextLevelData) {
+    // 4. Обновляем RGB-полоску прогресса
+    if (nextLevelData) {
+        // Считаем процент от 0 до цели следующего уровня
         let percent = (userXP / nextLevelData.xpRequired) * 100;
-        progressBarLocal.style.width = Math.min(percent, 100) + "%";
+        let finalPercent = Math.min(percent, 100);
+
+        if (progressBarLocal) {
+            progressBarLocal.style.width = finalPercent + "%";
+        }
+    } else {
+        // Если уровни закончились — фиксируем полоску на 100%
+        if (progressBarLocal) progressBarLocal.style.width = "100%";
+        levelNameElemLocal.innerText = `${name} (MAX УР.)`;
     }
 }
+
+
 
 
 
@@ -122,10 +134,10 @@ function closeLevelModal() {
 // === ЛОГИКА КЛИКА ===
 function handlePress(e) {
     // 1. Сначала определяем, будет ли удар критическим (шанс 10%)
-    const isCrit = Math.random() < 0.1;
+    const isCrit = Math.random() < criticalChance;
     const currentDamage = isCrit ? (clickPower * 10) : clickPower;
 
-    // 2. Проверяем энергию (тратим энергию только за БАЗОВЫЙ клик, крит — это бонус!)
+    // 2. Проверяем энергию
     const energyCost = clickPower;
     if (energy < energyCost) {
         if (energyElem) {
@@ -135,10 +147,10 @@ function handlePress(e) {
         return;
     }
 
-    // 3. Начисляем валюту (уже с учетом возможного крита)
+    // 3. Начисляем валюту
     clickCount += currentDamage;
 
-    // 4. Начисляем опыт (всегда +1)
+    // 4. Начисляем опыт
     if (typeof addXP === 'function') {
         addXP(1);
     }
@@ -150,15 +162,31 @@ function handlePress(e) {
     if (scoreElem) scoreElem.textContent = clickCount;
     if (energyElem) energyElem.textContent = `⚡ ${energy}`;
 
-    // 7. Анимация монеты (при крите трясем сильнее)
+    // 7. Анимация монеты 3D наклон
     if (coin) {
-        coin.style.transform = isCrit ? 'scale(0.8) rotate(10deg)' : 'scale(0.95)';
-        setTimeout(() => {
-            if (coin) coin.style.transform = 'scale(1) rotate(0deg)';
-        }, 100);
-    }
+        const coinRect = coin.getBoundingClientRect();
 
-    // 8. ВАЖНО: передаем урон и статус крита в вылетающие цифры
+        // Корректное получение координат для ПК и мобилок
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+        const coinCenterX = coinRect.left + coinRect.width / 2;
+        const coinCenterY = coinRect.top + coinRect.height / 2;
+
+        const offsetX = (clientX - coinCenterX) / (coinRect.width / 2);
+        const offsetY = (clientY - coinCenterY) / (coinRect.height / 2);
+
+        const rotateY = offsetX * 20; // Угол наклона по горизонтали
+        const rotateX = -offsetY * 20; // Угол наклона по вертикали
+
+        coin.style.transform = `scale(0.95) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+        setTimeout(() => {
+            coin.style.transform = 'scale(1) rotateX(0deg) rotateY(0deg)';
+        }, 100);
+    } // <--- ЗДЕСЬ БЫЛА ОШИБКА (нужно закрыть скобку)
+
+    // 8. Вылетающие цифры
     if (typeof createFloatingText === 'function') {
         createFloatingText(e, currentDamage, isCrit);
     }
@@ -169,6 +197,7 @@ function handlePress(e) {
     }
     saveGame();
 }
+
 
 
 
@@ -195,15 +224,21 @@ function createFloatingText(e, amount, isCrit) {
     setTimeout(() => text.remove(), 800);
 }
 
-
-// === СКЛАД И ФЕРМА ===
 function updateFarmUI() {
     const box = document.getElementById('farm-box');
     const bubble = document.getElementById('farm-storage-text');
+
+    // Если есть хотя бы минимальная прибыль (ферма куплена)
     if (autoClicksPerSecond > 0) {
-        if (box) box.style.display = 'flex';
-        if (bubble) bubble.innerText = `📦 ${Math.floor(farmStorage)}`;
+        if (box) box.style.display = 'flex'; // Показываем ящик
+
+        if (bubble) {
+            // Показываем накопленное / Максимум (из твоей переменной storageMax или farmStorageMax)
+            // Используй то название, которое у тебя в constants.js
+            bubble.innerText = `📦 ${Math.floor(farmStorage)} / ${storageMax}`;
+        }
     } else {
+        // Если фермы нет — ящик не мозолит глаза
         if (box) box.style.display = 'none';
     }
 }
@@ -277,6 +312,8 @@ function renderLevelsRoadmap() {
 
 
 
+
+
 // === СОХРАНЕНИЕ И ЗАГРУЗКА ===
 function saveGame() {
     if (typeof checkAchievements === 'function') checkAchievements();
@@ -284,7 +321,8 @@ function saveGame() {
         clickCount, currentCoinSkin, purchasedSkins, clickPower, maxEnergy,
         userLevel, userXP, xpToNextLevel, autoClicksPerSecond, autoFarmLevel,
         farmStorage, currentAvatarIndex, purchasedAvatars, unlockedAchievements,
-        energy, lastLogin: Date.now(),usedBonusCodes
+        energy, lastLogin: Date.now(),usedBonusCodes,criticalChance, energyRegenSpeed,
+        cloverLevel, honeyLevel
     };
     localStorage.setItem('bulbaSave', JSON.stringify(gameState));
 }
@@ -310,6 +348,11 @@ function loadGame() {
         unlockedAchievements = data.unlockedAchievements || [];
         purchasedAvatars = data.purchasedAvatars || [0];
         currentAvatarIndex = data.currentAvatarIndex || 0;
+        criticalChance = data.criticalChance || 0.1;      // 10% шанс
+        energyRegenSpeed = data.energyRegenSpeed || 1;    // +1 энергия (минимум 1!)
+        cloverLevel = data.cloverLevel || 0;
+        honeyLevel = data.honeyLevel || 0;            // Начальная цена клевера
+        honeyCost = data.honeyCost || 1000;              // Начальная цена мёда
 
         // ИСПРАВЛЕННО: теперь 'data' здесь видна!
         usedBonusCodes = data.usedBonusCodes || [];
@@ -320,6 +363,8 @@ function loadGame() {
         energy = Math.min((data.energy || 100) + energyGained, maxEnergy);
     } else {
         energy = 100;
+        honeyLevel = 0;
+        cloverLevel = 0;
         usedBonusCodes = []; // Инициализируем для нового игрока
     }
 
@@ -341,13 +386,13 @@ function updateCoinImage() {
 window.addEventListener('load', () => {
     loadGame(); // Сначала загружаем всё
 
-    // Таймер восстановления ЭНЕРГИИ (+1 каждые 3 сек)
     setInterval(() => {
-        if (energy < maxEnergy) {
-            energy++;
-            if (energyElem) energyElem.textContent = `⚡ ${energy}`;
-        }
-    }, 3000);
+    if (energy < maxEnergy) {
+        // Прибавляем столько, сколько прокачано в "Бочке мёда"
+        energy = Math.min(maxEnergy, energy + energyRegenSpeed);
+        if (energyElem) energyElem.textContent = `⚡ ${energy}`;
+    }
+}, 3000); // Интервал можно тоже потом ускорять
 
     // Таймер АВТОФЕРМЫ (если куплена)
     setInterval(() => {

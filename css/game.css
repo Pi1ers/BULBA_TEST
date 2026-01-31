@@ -1,34 +1,54 @@
 #screen-farm {
     justify-content: center !important;
-    padding-top: 0;
+    padding-top: 20px;
     overflow: hidden;
 }
 
 /* МОНЕТА И СЧЕТ */
 .score-wrapper {
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    gap: 10px;
-    margin-top: -10vh;
-    margin-bottom: 20px;
+    justify-content: center; /* Центрируем содержимое */
+    width: 100%;
+    gap: 15px;
+    margin-top: 110px;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 6; /* Чтобы быть выше фона, но ниже модалок */
 }
 .score-wrapper img { width: 50px; }
-#score { font-size: 2.5em; font-weight: bold; }
+#score { font-size: 48px; font-weight: bold; }
 
 #coin {
-    width: 250px !important;
-    height: 250px !important;
-    background-position: center;
-    background-repeat: no-repeat;
+    width: 300px;
+    height: 300px;
     background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
-    transition: transform 0.1s ease;
+    transition: transform 0.1s ease-out; /* Убираем старый transition, он будет динамическим */
+    margin: 20px 0;
+    margin-top: 10px; /* Небольшой отступ от счета */
+    margin-bottom: 80px; /* Поднимаем её выше над футером */
     z-index: 5;
+    /* Важно для 3D-эффекта: */
+    transform-style: preserve-3d;
+     /* Добавим легкое свечение самой монете для объема */
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.2))
+}
+
+/* Адаптация для мобилок, чтобы не была слишком огромной */
+@media (max-width: 600px) {
+    #coin {
+        width: 300px !important;
+        height: 300px !important;
+        margin-bottom: 60px;
+    }
 }
 
 #energy {
     position: fixed;
-    bottom: 120px;
+    bottom: 140px;
     left: 20px;
     font-size: 1.5em;
     font-weight: bold;
@@ -38,40 +58,34 @@
 
 /* ЯЩИК ФЕРМЫ */
 #farm-box {
-    display: none;
+    display: none; /* Проявится после покупки через JS */
     position: fixed;
     right: 20px;
-    bottom: 120px; /* Приподняли над футером (90-100px) */
-    width: 80px;
-    height: 80px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 2px solid gold;
-    border-radius: 15px;
-    flex-direction: column;
+    bottom: 130px; /* На уровне с энергией */
+    background: rgba(0, 0, 0, 0.4); /* Полупрозрачный фон без рамок */
+    padding: 18px 15px;
+    border-radius: 50px; /* Округлая форма как у энергии */
     align-items: center;
     justify-content: center;
     cursor: pointer;
     z-index: 100;
-    transition: transform 0.1s;
+    transition: transform 0.1s, background 0.2s;
     color: white;
-    font-family: sans-serif;
 }
 
 #farm-box:active {
-    transform: scale(0.9); /* Эффект нажатия */
+    transform: scale(0.9);
+    background: rgba(255, 215, 0, 0.2); /* Вспышка при нажатии */
 }
 
 #farm-storage-text {
-    font-size: 14px;
+    font-size: 1.3em;
     font-weight: bold;
-    color: #fff;
+    font-family: 'Arial', sans-serif;
+    white-space: nowrap; /* Чтобы не переносилось */
 }
 
-#farm-box span {
-    font-size: 10px;
-    text-transform: uppercase;
-    color: gold;
-}
+
 
 /* === АНИМАЦИЯ ЦИФР (ВЫЛЕТАЮЩИЕ +1) === */
 .floating-number {

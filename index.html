@@ -12,47 +12,56 @@
 <link rel="stylesheet" href="css/bank.css">
 </head>
 <body>
-   <div class="header-strip">
-          <!-- 1. ВЕРХНЯЯ ПОЛОСКА (HEADER) -->
-        <div class="header-stat" style="flex-direction: row; gap: 10px; align-items: center;">
-            <div class="mini-avatar" onclick="switchTab('screen-avatars')">
-            <img src="URL_АВАТАРА" id="user-avatar-mini" style="width: 35px; height: 35px; border-radius: 50%; border: 1px solid gold;">
+  <div class="header-strip">
+    <!-- ЛЕВАЯ ГРУППА: Квадрат + (Инфо столбиком) -->
+    <div class="header-left-group">
+        <div class="mini-avatar-square" onclick="switchTab('screen-avatars')">
+            <img src="" id="user-avatar-mini">
+        </div>
+        <div class="header-info-column">
+            <div class="header-top-line">
+                <span id="level-name">Загрузка...</span>
             </div>
-        <div style="display: flex; flex-direction: column;">
-        <span id="level-name">Загрузка...</span>
-            <div class="progress-container" onclick="switchTab('screen-levels')">
-            <div id="level-progress" class="progress-bar"></div>
+            <!-- Наша уникальная полоска прогресса -->
+            <div class="bulba-track-container" onclick="switchTab('screen-levels')">
+                <div id="level-progress" class="bulba-track-fill"></div>
             </div>
         </div>
     </div>
 
-    <!-- ПРАВО: ПРИБЫЛЬ -->
-        <div class="header-stat header-profit">
-            <span style="font-size: 10px; color: #888;">Прибыль в час</span>
-            <div style="display: flex; align-items: center; gap: 4px;">
-                <img src="https://raw.githubusercontent.com" style="width: 14px;">
-                <span id="profit-per-hour" style="color: #2ecc71; font-weight: bold;">+0</span>
-            </div>
+    <!-- ПРАВАЯ ГРУППА: Прибыль -->
+    <div class="header-profit-block">
+        <span class="profit-label">Прибыль в час</span>
+        <div class="profit-amount">
+            <img src="https://raw.githubusercontent.com" style="width:14px;">
+            <span id="profit-per-hour">+0</span>
         </div>
+    </div>
+</div>
 
-   </div>
 
     <!-- 2. ОСНОВНОЙ ЭКРАН ИГРЫ -->
     <div id="screen-farm" class="game-screen">
-
-        <!-- СЧЁТ ТЕПЕРЬ ТУТ (НАД МОНЕТОЙ) -->
+        <!-- Счёт над монетой -->
         <div class="score-wrapper">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" alt="score icon">
             <div id="score">0</div>
         </div>
           <!-- МОНЕТА -->
-        <div id="coin"></div>
-        <!-- ЭНЕРГИЯ -->
-        <div id="energy">⚡ 100</div>
-            <div id="farm-box" onclick="collectFarm()">
-            <div id="farm-storage-text">📦 0 / 1000</div>
+         <div id="coin" onclick="handlePress(event)"></div>
+
+        <!-- КОНТЕЙНЕР СТАТИСТИКИ (Энергия и Ящик) -->
+       <div class="stats-container">
+            <div id="energy-capsule">
+            <span id="energy">⚡ 100 / 100</span>
+            </div>
+
+           <!-- Кнопка Премиум-ускорения (вместо ящика) -->
+        <div id="premium-boost-btn" onclick="openPremiumStore()">
+            <span id="boost-text">🚀 УСКОРИТЬ</span>
         </div>
     </div>
+</div>
 
     <!-- ЭКРАН РЫНКА -->
     <div id="screen-market" class="game-screen" style="display: none;">
@@ -63,18 +72,19 @@
 
     <!-- Добавили третью кнопку -->
     <div class="market-tabs">
-        <button class="tab-btn active" onclick="showMarketTab('levels')">МОНЕТЫ</button>
-        <button class="tab-btn" onclick="showMarketTab('boosts')">УЛУЧШЕНИЯ</button>
-        <button class="tab-btn" onclick="showMarketTab('backgrounds')">ФОНЫ</button>
-    </div>
+        <button class="tab-btn active" onclick="showMarketTab('level', this)">МОНЕТЫ</button>
+    <button class="tab-btn" onclick="showMarketTab('boost', this)">УЛУЧШЕНИЯ</button>
+    <button class="tab-btn" onclick="showMarketTab('business', this)">БИЗНЕС</button>
+</div>
 
     <!-- Сетка Дизайнов -->
     <div class="shop-grid" id="level-shop-grid"></div>
     <!-- Сетка Улучшений -->
     <div class="shop-grid" id="boost-shop-grid" style="display: none;"></div>
       <!-- НОВАЯ Сетка Фонов -->
-    <div class="shop-grid" id="bg-shop-grid" style="display: none;"></div>
+    <div class="shop-grid" id="business-shop-grid" style="display: none;"></div>
 </div>
+
 
 <!-- МОДАЛЬНОЕ ОКНО -->
 <div id="shop-modal" class="modal-overlay" style="display: none;">
@@ -161,19 +171,7 @@
 
 
       <!-- БАННЕР ПРОФИЛЯ (Один на все экраны) -->
-    <div class="user-profile">
-        <div class="avatar-slot" onclick="switchTab('screen-avatars')">
-            <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/AVATARS/старт_аватар-removebg-preview.png" id="user-avatar">
-        </div>
-        <div class="profile-info">
-            <div id="level-name">Уровень 0</div>
-                <!-- Добавляем onclick и стиль курсора сюда -->
-                <div class="progress-container" onclick="switchTab('screen-levels')" style="cursor: pointer;">
-                    <div class="progress-bar" id="level-progress"></div>
-                </div>
-        </div>
 
-    </div>
 
     <!-- ЭКРАН ВЫБОРА АВАТАРА -->
     <div id="screen-avatars" class="game-screen" style="display: none;">
@@ -237,7 +235,9 @@
 </div>
     <!-- Сначала данные -->
     <script src="js/constants.js"></script>
+    <script src="js/business_data.js"></script>
     <script src="js/achievements.js"></script>
+
     <!-- логика -->
     <script src="js/game.js"></script>
      <script src="js/bank.js"></script>

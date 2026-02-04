@@ -1,0 +1,72 @@
+
+
+/* МОНЕТА И СЧЕТ */
+.score-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Центрируем содержимое */
+    width: 100%;
+    gap: 15px;
+    margin-top: 110px;
+    margin-bottom: 50px;
+    position: relative;
+    z-index: 6; /* Чтобы быть выше фона, но ниже модалок */
+}
+.score-wrapper img { width: 50px; }
+#score { font-size: 48px; font-weight: bold; }
+
+#coin {
+    width: 300px;
+    height: 300px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    transition: transform 0.1s ease-out; /* Убираем старый transition, он будет динамическим */
+    margin: 20px 0;
+    margin-top: 10px; /* Небольшой отступ от счета */
+    margin-bottom: 80px; /* Поднимаем её выше над футером */
+    z-index: 5;
+    /* Важно для 3D-эффекта: */
+    transform-style: preserve-3d;
+     /* Добавим легкое свечение самой монете для объема */
+    filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.2))
+}
+
+/* Адаптация для мобилок, чтобы не была слишком огромной */
+@media (max-width: 600px) {
+    #coin {
+        width: 250px !important;
+        height: 250px !important;
+        margin-bottom: 60px;
+    }
+}
+
+#energy {
+    position: fixed;
+    bottom: 140px;
+    left: 20px;
+    font-size: 1.0em;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00ffcc;
+}
+
+
+
+
+
+/* === АНИМАЦИЯ ЦИФР (ВЫЛЕТАЮЩИЕ +1) === */
+.floating-number {
+    position: fixed; /* Вырывает из потока, чтобы не двигать монету */
+    pointer-events: none;
+    color: gold;
+    font-size: 20px;
+    font-weight: bold;
+    z-index: 10000;
+    animation: floatUp 0.8s ease-out forwards;
+}
+
+@keyframes floatUp {
+    0% { transform: translate(-50%, 0); opacity: 1; }
+    100% { transform: translate(-50%, -150px); opacity: 0; }
+}

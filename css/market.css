@@ -1,0 +1,275 @@
+/* Специальный стиль для экрана рынка */
+#screen-market {
+    justify-content: flex-start !important;
+    padding-top: 20px;
+}
+
+/* Сетка: СТРОГО 3 колонки */
+/* 1. СЕТКА МАГАЗИНА (Базовый стиль) */
+.shop-grid {
+    grid-template-columns: 1fr 1fr; /* 2 колонки */
+    gap: 20px;
+    width: 90%;
+    padding: 10px;
+    box-sizing: border-box;
+    /* display: grid БУДЕТ СТАВИТЬ JS */
+}
+/* ============================================================
+   ЕДИНЫЙ СТИЛЬ КАРТОЧЕК МАГАЗИНА (БИЗНЕС И БУСТЫ)
+   ============================================================ */
+
+/* Общий контейнер карточки */
+.business-card, .boost-card {
+    background: linear-gradient(145deg, #2b2e33, #232529) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    justify-self: center;
+    box-sizing: border-box;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.1s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Эффект нажатия */
+.business-card:active, .boost-card:active {
+    transform: scale(0.96);
+}
+
+/* ВЕРХНЯЯ ЧАСТЬ (Иконка + Инфо) */
+.biz-header, .boost-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+/* Бокс для иконки (эмодзи) */
+.biz-icon-box, .boost-icon-box {
+    font-size: 32px;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+}
+
+/* Текстовая правая часть */
+.biz-right, .boost-right {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    gap: 2px;
+}
+
+.biz-name, .boost-name {
+    font-size: 11px;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.biz-profit-title, .boost-desc {
+    font-size: 8px;
+    color: #888;
+    font-weight: 600;
+}
+
+.biz-profit-num {
+    font-size: 10px;
+    color: #2ecc71;
+    font-weight: bold;
+    margin-top: 1px;
+}
+
+/* РАЗДЕЛИТЕЛИ */
+.biz-divider, .boost-divider {
+     display: block !important;
+    width: 100% !important; /* На всю ширину */
+    height: 1px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    margin: 10px 0 !important;
+    /* ГЛАВНОЕ: выкидываем её из потока флекса правой колонки */
+    flex-shrink: 0 !important;
+    align-self: stretch !important;
+}
+
+/* НИЖНЯЯ ПАНЕЛЬ (Уровень | Полоска | Цена) */
+.biz-footer, .boost-footer {
+    display: flex;
+    justify-content: center; /* Центрируем всю группу (Лвл + Полоска + Цена) */
+    align-items: center;
+    width: 100%;
+}
+
+
+/* Вертикальная полосочка */
+.biz-footer-divider, .boost-footer-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.2);
+
+    /* ИЗМЕНЯЙ ВТОРОЕ ЧИСЛО (15px):
+       Если хочешь раздвинуть шире — ставь 25px.
+       Если хочешь ближе — ставь 10px. */
+    margin: 0 34px !important;
+
+    flex-shrink: 0;
+}
+
+.biz-lvl, .boost-lvl {
+    font-size: 10px;
+    color: #6d7681;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.biz-price, .boost-price {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #ffd700;
+    font-weight: 800;
+    font-size: 11px;
+    white-space: nowrap;
+}
+
+/* Фикс для вкладок (чтобы не перемешивались) */
+.shop-grid[style*="display: none"] {
+    display: none !important;
+}
+
+
+/* 3. КАРТОЧКА МОНЕТ (СКИНОВ) */
+/* КАРТОЧКА МОНЕТЫ */
+.shop-card {
+    background: linear-gradient(145deg, #2b2e33, #232529) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 16px !important;
+    padding: 12px;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px; /* Зазор между верхним рядом и ценой */
+    width: 90%;
+    justify-self: center;
+}
+
+/* Верхний ряд: Большая монета и Название */
+.coin-main-row {
+    display: flex;
+    align-items: center; /* Центровка монеты и текста по одной линии */
+    gap: 15px; /* Расстояние от монеты до названия */
+}
+
+.coin-img-large {
+    width: 55px !important; /* Увеличенная монета */
+    height: 55px !important;
+    object-fit: contain;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); /* Тень для объема */
+}
+
+.coin-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: left;
+    line-height: 1.2;
+}
+
+/* Нижний ряд: Цена строго по центру */
+.coin-price-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 4px;
+}
+
+.coin-price-row span {
+    font-size: 13px;
+    font-weight: bold;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.1); /* Легкая подложка как в бизнесе */
+    padding: 2px 12px;
+    border-radius: 20px;
+}
+
+
+
+
+
+
+/* МОДАЛЬНОЕ ОКНО */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.9); display: flex; align-items: center;
+    justify-content: center; z-index: 10000;
+}
+.modal-content {
+    background: #222; border: 2px solid gold; border-radius: 20px;
+    padding: 30px; width: 80%; max-width: 300px; text-align: center; position: relative;
+}
+.modal-content img {
+    width: 80px !important; height: 80px !important; margin-bottom: 10px;}
+
+.close-modal { position: absolute; top: 5px; right: 10px; font-size: 30px; cursor: pointer;padding: 10px; color: gold; }
+#modal-buy-btn {
+    background: gold; border: none; padding: 12px; border-radius: 10px;
+    width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer;
+}
+
+}
+
+/* Если товар уже куплен */
+.shop-card.bought {
+    opacity: 0.5;
+    pointer-events: none; /* Нельзя нажать еще раз */
+    border-color: gray;
+}
+
+.shop-card.bought .price-tag {
+    color: gray;
+    font-size: 10px;
+}
+
+.market-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.tab-btn {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid gold;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: gold;
+    color: black;
+    box-shadow: 0 0 10px gold;
+}
+
+.boost-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.boost-icon img {
+    width: 50px;
+}

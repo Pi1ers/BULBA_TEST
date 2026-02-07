@@ -153,59 +153,66 @@
 
 
 /* 3. КАРТОЧКА МОНЕТ (СКИНОВ) */
-/* КАРТОЧКА МОНЕТЫ */
+/* КАРТОЧКА МОНЕТЫ — АДАПТИВ 2х2 */
 .shop-card {
     background: linear-gradient(145deg, #2b2e33, #232529) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 16px !important;
-    padding: 12px;
+    padding: 10px !important;
     display: flex !important;
-    flex-direction: column !important;
-    gap: 8px; /* Зазор между верхним рядом и ценой */
-    width: 90%;
-    justify-self: center;
+    flex-direction: column !important; /* Укладываем цену ПОД основной ряд */
+    width: 100% !important; /* На всю ширину ячейки сетки */
+    box-sizing: border-box !important;
+    margin: 0 !important; /* Убираем смещение вправо */
+    overflow: hidden; /* Запрещаем расширяться */
 }
 
-/* Верхний ряд: Большая монета и Название */
+/* Верхний ряд (Картинка + Название) */
 .coin-main-row {
-    display: flex;
-    align-items: center; /* Центровка монеты и текста по одной линии */
-    gap: 15px; /* Расстояние от монеты до названия */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    overflow: hidden; /* Чтобы длинное имя не ломало сетку */
 }
 
 .coin-img-large {
-    width: 55px !important; /* Увеличенная монета */
-    height: 55px !important;
+    width: 35px !important; /* Уменьшаем, чтобы влезло в 2х2 */
+    height: 35px !important;
     object-fit: contain;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5)); /* Тень для объема */
+    flex-shrink: 0; /* Не даем картинке сжиматься */
 }
 
 .coin-title {
-    font-size: 13px;
+    font-size: 10px !important; /* На мобилках лучше 10px */
     font-weight: 800;
     color: #fff;
     text-transform: uppercase;
     text-align: left;
-    line-height: 1.2;
+    white-space: nowrap; /* В одну строку */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Три точки, если имя длинное */
+    flex: 1; /* Занимает всё оставшееся место */
 }
 
-/* Нижний ряд: Цена строго по центру */
+/* Нижний ряд (Цена) */
 .coin-price-row {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    margin-top: 4px;
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+    margin-top: 8px !important;
 }
 
 .coin-price-row span {
-    font-size: 13px;
+    font-size: 11px !important;
     font-weight: bold;
     color: #ffd700;
-    background: rgba(255, 215, 0, 0.1); /* Легкая подложка как в бизнесе */
-    padding: 2px 12px;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 2px 8px;
     border-radius: 20px;
+    white-space: nowrap;
 }
-
 
 
 

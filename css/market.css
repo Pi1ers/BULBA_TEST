@@ -32,8 +32,8 @@
 .business-card, .boost-card {
     background: linear-gradient(145deg, #2b2e33, #232529) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    padding: 12px;
+    border-radius: 12px !important; /* Чуть острее углы для компактности */
+    padding: 8px !important; /* Уменьшили с 12px */
     display: flex;
     flex-direction: column;
 
@@ -65,9 +65,9 @@
 
 /* Бокс для иконки (эмодзи) */
 .biz-icon-box, .boost-icon-box {
-    font-size: 32px;
-    width: 45px;
-    height: 45px;
+    font-size: 26px !important; /* Иконка поменьше */
+    width: 38px !important; /* Было 45px */
+    height: 38px !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -92,7 +92,7 @@
 }
 
 .biz-profit-title, .boost-desc {
-    font-size: 8px;
+    font-size: 10px !important; /* Шрифт поменьше */
     color: #888;
     font-weight: 600;
 }
@@ -131,7 +131,7 @@
     height: 12px;
     background: rgba(255, 255, 255, 0.2);
     /* Замени 34px на 10px-15px, чтобы влезло на любой экран телефона */
-    margin: 0 12px !important;
+    margin: 0 8px !important;
     flex-shrink: 0;
 }
 
@@ -148,7 +148,7 @@
     gap: 4px;
     color: #ffd700;
     font-weight: 800;
-    font-size: 11px;
+    font-size: 10px;
     white-space: nowrap;
 }
 
@@ -161,7 +161,8 @@
     background: linear-gradient(145deg, #2b2e33, #232529) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 16px !important;
-    padding: 10px 12px;
+    padding: 8px !important;;
+    gap: 4px !important; /* Плотнее друг к другу */
     display: flex !important;
     flex-direction: column !important;
 
@@ -178,9 +179,9 @@
 /* Верхний ряд (Картинка + Название) */
 .coin-main-row {
     display: flex !important;
-    flex-direction: row !important;
+    flex-direction: column  !important;
     align-items: center !important;
-    gap: 8px !important;
+    gap: 4px !important;
     width: 100% !important;
     overflow: hidden; /* Чтобы длинное имя не ломало сетку */
 }
@@ -197,11 +198,15 @@
     font-weight: 800;
     color: #fff;
     text-transform: uppercase;
-    text-align: left;
-    white-space: nowrap; /* В одну строку */
+    text-align: center;
+    /* ВКЛЮЧАЕМ 2 СТРОКИ: */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis; /* Три точки, если имя длинное */
-    flex: 1; /* Занимает всё оставшееся место */
+    white-space: normal !important; /* Разрешаем перенос */
+    line-height: 1.1;
+    height: 22px; /* Фиксируем высоту под 2 строки */
 }
 
 /* Нижний ряд (Цена) */
@@ -291,4 +296,5 @@
 
 .boost-icon img {
     width: 50px;
+
 }

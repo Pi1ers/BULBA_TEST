@@ -1,0 +1,163 @@
+
+/* ВЕРХНЯЯ ПАНЕЛЬ ПРОФИЛЯ */
+
+
+.avatar-slot {
+    width: 40px;
+    height: 40px;
+    background: gold;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #fff;
+}
+
+.avatar-slot img { width: 100%; height: 100%; object-fit: cover; }
+.profile-info { display: flex; flex-direction: column; gap: 4px; }
+
+.avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.avatar-item {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+    background-size: cover;
+    position: relative;
+}
+
+.avatar-item.active { border-color: gold; box-shadow: 0 0 15px gold; }
+.avatar-item.locked { opacity: 0.3; filter: grayscale(1); cursor: not-allowed; }
+
+.avatar-item.locked::after {
+    content: attr(data-level);
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    white-space: nowrap;
+    color: white;
+    background: rgba(255, 0, 0, 0.8);
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid white;
+}
+
+/* УВЕДОМЛЕНИЯ ОБ АЧИВКАХ */
+.ach-toast {
+    position: fixed;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: gold;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 1px solid gold;
+    z-index: 10001;
+    text-align: center;
+    animation: slideUp 0.5s forwards, fadeOut 0.5s 2.5s forwards;
+}
+
+@keyframes slideUp { from { bottom: -50px; } to { bottom: 100px; } }
+@keyframes fadeOut { to { opacity: 0; } }
+
+
+
+
+#level-name {
+    font-size: 10px; /* Чуть меньше, чтобы влезло в шапку */
+    font-weight: bold;
+    color: #aaa; /* Серый, чтобы золото полоски выделялось */
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.progress-container {
+    width: 100px;
+    height: 8px; /* Чуть толще для видимости RGB */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Сама RGB полоска */
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    /* Красивый RGB градиент */
+    background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+    background-size: 200% 100%;
+    animation: rgb-flow 3s linear infinite; /* Плавное перетекание цветов */
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+/* Анимация перелива цветов */
+@keyframes rgb-flow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+
+/* ******************  модальное окно нового уровня LEVEL UP АНИМАЦИЯ */
+.level-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(5px);
+}
+
+.level-card {
+    text-align: center;
+    position: relative;
+    animation: popIn 0.5s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+}
+
+.level-number {
+    font-size: 80px;
+    color: gold;
+    font-weight: 900;
+    text-shadow: 0 0 20px gold;
+    margin: 10px 0;
+}
+
+.level-reward { color: #2ecc71; font-weight: bold; font-size: 20px; }
+
+/* Лучи на фоне  нового уровня*/
+.sun-rays {
+    position: absolute;
+    top: 50%; left: 50%; width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.level-btn {
+    background: linear-gradient(180deg, gold, #ff8c00);
+    border: none;
+    padding: 15px 50px;
+    border-radius: 25px;
+    color: black;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}

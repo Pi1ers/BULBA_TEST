@@ -17,6 +17,11 @@
     align-items: start; /* Чтобы карточки не растягивались по высоте соседа */
 }
 
+/* Фикс для вкладок (чтобы не перемешивались) */
+.shop-grid[style*="display: none"] {
+    display: none !important;
+}
+
 /* ============================================================
    ЕДИНЫЙ СТИЛЬ КАРТОЧЕК МАГАЗИНА (БИЗНЕС И БУСТЫ)
    ============================================================ */
@@ -29,9 +34,12 @@
     padding: 12px;
     display: flex;
     flex-direction: column;
-    width: 85%;
-    justify-self: center;
+    /* ИСПРАВЛЕНИЯ ДЛЯ СЕТКИ 2х2: */
+    width: 100% !important; /* Теперь занимает всю свою половинку */
     box-sizing: border-box;
+    /* Убираем лишние центровки */
+    justify-self: stretch;
+
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     transition: transform 0.1s ease;
     cursor: pointer;
@@ -119,12 +127,8 @@
     width: 1px;
     height: 12px;
     background: rgba(255, 255, 255, 0.2);
-
-    /* ИЗМЕНЯЙ ВТОРОЕ ЧИСЛО (15px):
-       Если хочешь раздвинуть шире — ставь 25px.
-       Если хочешь ближе — ставь 10px. */
-    margin: 0 34px !important;
-
+    /* Замени 34px на 10px-15px, чтобы влезло на любой экран телефона */
+    margin: 0 12px !important;
     flex-shrink: 0;
 }
 
@@ -145,10 +149,7 @@
     white-space: nowrap;
 }
 
-/* Фикс для вкладок (чтобы не перемешивались) */
-.shop-grid[style*="display: none"] {
-    display: none !important;
-}
+
 
 
 /* 3. КАРТОЧКА МОНЕТ (СКИНОВ) */
@@ -275,5 +276,4 @@
 
 .boost-icon img {
     width: 50px;
-
 }

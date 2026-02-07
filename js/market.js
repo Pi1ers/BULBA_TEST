@@ -1,294 +1,406 @@
-/* Специальный стиль для экрана рынка */
-#screen-market {
-    justify-content: flex-start !important;
-    padding-top: 20px;
+// Запуск при загрузке страницы
+window.addEventListener('load', () => {
+    generateShopCards();
+});
+
+// Переключение вкладок Магазина
+function showMarketTab(tabName, btnElement) {
+    // 1. Список всех сеток, которые у нас есть в HTML
+    const gridIds = ['level-shop-grid', 'boost-shop-grid', 'business-shop-grid'];
+
+    // 2. Скрываем все сетки
+    gridIds.forEach(id => {
+        const grid = document.getElementById(id);
+        if (grid) grid.style.display = 'none';
+    });
+
+    // 3. Показываем нужную сетку
+    const targetId = tabName + '-shop-grid';
+    const targetGrid = document.getElementById(targetId);
+    if (targetGrid) {
+        targetGrid.style.display = 'grid';
+    } else {
+        console.error("Не нашли сетку с ID:", targetId);
+    }
+
+    // 4. Переключаем подсветку кнопок
+    const allBtns = document.querySelectorAll('.market-tabs .tab-btn');
+    allBtns.forEach(btn => btn.classList.remove('active'));
+
+    if (btnElement) {
+        btnElement.classList.add('active');
+    }
+
+    // 5. Запускаем отрисовку контента для этой вкладки
+    if (tabName === 'level') generateShopCards();
+    if (tabName === 'boost') generateBoostCards();
+    if (tabName === 'business') renderBusinessShop();
 }
 
 
 
+// Генерирует карточки скинов
+function generateShopCards() {
+    const grid = document.getElementById('level-shop-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
 
-/* Сетка: СТРОГО 3 колонки */
-/* 1. СЕТКА МАГАЗИНА (Базовый стиль) */
-.shop-grid {
-    display: grid !important;
-    /* Жестко 2 колонки по 50% */
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 10px !important;
-    width: 100% !important;
-    padding: 10px !important;
-    box-sizing: border-box !important;
-}
+    // ГЛАВНАЯ ПРОВЕРКА: видит ли функция массив из constants.js?
+    if (typeof coinSkinsData === 'undefined') {
+        console.error("Массив coinSkinsData не найден!");
+        return;
+    }
 
-/* Фикс для вкладок (чтобы не перемешивались) */
-.shop-grid[style*="display: none"] {
-    display: none !important;
-}
+    for (let i = 0; i < levelCosts.length; i++) {
+        const skin = coinSkinsData[i];
+        const cost = levelCosts[i];
 
-/* ============================================================
-   ЕДИНЫЙ СТИЛЬ КАРТОЧЕК МАГАЗИНА (БИЗНЕС И БУСТЫ)
-   ============================================================ */
+                const card = document.createElement('div');
+        card.className = 'shop-card';
+        card.onclick = () => openMarketModal(i);
 
-/* Общий контейнер карточки */
-.business-card, .boost-card {
-    background: linear-gradient(145deg, #2b2e33, #232529) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    padding: 12px;
-    display: flex;
-    flex-direction: column;
-
-    /* ИСПРАВЛЕНИЕ: */
-    width: 100% !important; /* Занимает всю ячейку */
-    box-sizing: border-box;
-    /* justify-self: center; — УДАЛИ ЭТО */
-
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.1s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
+      card.innerHTML = `
+    <div class="coin-main-row">
+        <img src="${skin.url}" class="coin-img-large">
+        <div class="coin-title">${skin.name}</div>
+    </div>
+    <div class="coin-price-row">
+        <span>🥔 ${cost.toLocaleString()}</span>
+    </div>
+`;
 
 
-/* Эффект нажатия */
-.business-card:active, .boost-card:active {
-    transform: scale(0.96);
-}
+        grid.appendChild(card);
 
-/* ВЕРХНЯЯ ЧАСТЬ (Иконка + Инфо) */
-.biz-header, .boost-header {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    margin-bottom: 4px;
-}
-
-/* Бокс для иконки (эмодзи) */
-.biz-icon-box, .boost-icon-box {
-    font-size: 32px;
-    width: 45px;
-    height: 45px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 12px;
-}
-
-/* Текстовая правая часть */
-.biz-right, .boost-right {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    gap: 2px;
-}
-
-.biz-name, .boost-name {
-    font-size: 11px;
-    font-weight: 800;
-    color: #fff;
-    text-transform: uppercase;
-}
-
-.biz-profit-title, .boost-desc {
-    font-size: 8px;
-    color: #888;
-    font-weight: 600;
-}
-
-.biz-profit-num {
-    font-size: 10px;
-    color: #2ecc71;
-    font-weight: bold;
-    margin-top: 1px;
-}
-
-/* РАЗДЕЛИТЕЛИ */
-.biz-divider, .boost-divider {
-     display: block !important;
-    width: 100% !important; /* На всю ширину */
-    height: 1px !important;
-    background: rgba(255, 255, 255, 0.2) !important;
-    margin: 10px 0 !important;
-    /* ГЛАВНОЕ: выкидываем её из потока флекса правой колонки */
-    flex-shrink: 0 !important;
-    align-self: stretch !important;
-}
-
-/* НИЖНЯЯ ПАНЕЛЬ (Уровень | Полоска | Цена) */
-.biz-footer, .boost-footer {
-    display: flex;
-    justify-content: center; /* Центрируем всю группу (Лвл + Полоска + Цена) */
-    align-items: center;
-    width: 100%;
-}
-
-
-/* Вертикальная полосочка */
-.biz-footer-divider, .boost-footer-divider {
-    width: 1px;
-    height: 12px;
-    background: rgba(255, 255, 255, 0.2);
-    /* Замени 34px на 10px-15px, чтобы влезло на любой экран телефона */
-    margin: 0 12px !important;
-    flex-shrink: 0;
-}
-
-.biz-lvl, .boost-lvl {
-    font-size: 10px;
-    color: #6d7681;
-    font-weight: bold;
-    white-space: nowrap;
-}
-
-.biz-price, .boost-price {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    color: #ffd700;
-    font-weight: 800;
-    font-size: 11px;
-    white-space: nowrap;
-}
-
-
-
-
-/* 3. КАРТОЧКА МОНЕТ (СКИНОВ) */
-/* КАРТОЧКА МОНЕТЫ — АДАПТИВ 2х2 */
-.shop-card {
-    background: linear-gradient(145deg, #2b2e33, #232529) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 16px !important;
-    padding: 10px 12px;
-    display: flex !important;
-    flex-direction: column !important;
-
-    /* ИСПРАВЛЕНИЕ: */
-    width: 100% !important;
-    min-width: 0 !important; /* Не дает распирать сетку */
-    margin: 0 !important;
-    box-sizing: border-box !important;
-
-    cursor: pointer;
-    transition: transform 0.1s;
-}
-
-/* Верхний ряд (Картинка + Название) */
-.coin-main-row {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    gap: 8px !important;
-    width: 100% !important;
-    overflow: hidden; /* Чтобы длинное имя не ломало сетку */
-}
-
-.coin-img-large {
-    width: 35px !important; /* Уменьшаем, чтобы влезло в 2х2 */
-    height: 35px !important;
-    object-fit: contain;
-    flex-shrink: 0; /* Не даем картинке сжиматься */
-}
-
-.coin-title {
-    font-size: 10px !important; /* На мобилках лучше 10px */
-    font-weight: 800;
-    color: #fff;
-    text-transform: uppercase;
-    text-align: left;
-    white-space: nowrap; /* В одну строку */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Три точки, если имя длинное */
-    flex: 1; /* Занимает всё оставшееся место */
-}
-
-/* Нижний ряд (Цена) */
-.coin-price-row {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-    margin-top: 8px !important;
-}
-
-.coin-price-row span {
-    font-size: 11px !important;
-    font-weight: bold;
-    color: #ffd700;
-    background: rgba(255, 215, 0, 0.1);
-    padding: 2px 8px;
-    border-radius: 20px;
-    white-space: nowrap;
+    }
 }
 
 
 
 
 
-/* МОДАЛЬНОЕ ОКНО */
-.modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.9); display: flex; align-items: center;
-    justify-content: center; z-index: 10000;
-}
-.modal-content {
-    background: #222; border: 2px solid gold; border-radius: 20px;
-    padding: 30px; width: 80%; max-width: 300px; text-align: center; position: relative;
-}
-.modal-content img {
-    width: 80px !important; height: 80px !important; margin-bottom: 10px;}
+// Обновляет визуальное состояние карточек (Куплено/Надето)
+function updateCardStatuses() {
+    const cards = document.querySelectorAll('#level-shop-grid .shop-card');
+    cards.forEach((card, index) => {
+        card.classList.remove('bought', 'active-skin');
 
-.close-modal { position: absolute; top: 5px; right: 10px; font-size: 30px; cursor: pointer;padding: 10px; color: gold; }
-#modal-buy-btn {
-    background: gold; border: none; padding: 12px; border-radius: 10px;
-    width: 100%; font-weight: bold; margin-top: 15px; cursor: pointer;
-}
+        // Проверяем через массив purchasedSkins (должен быть в game.js)
+        if (typeof purchasedSkins !== 'undefined' && purchasedSkins.includes(index)) {
+            card.classList.add('bought');
 
-}
-
-/* Если товар уже куплен */
-.shop-card.bought {
-    opacity: 0.5;
-    pointer-events: none; /* Нельзя нажать еще раз */
-    border-color: gray;
+            if (index === currentCoinSkin) {
+                card.classList.add('active-skin');
+                card.querySelector('.price-tag').innerText = 'НАДЕТО';
+            } else {
+                card.querySelector('.price-tag').innerText = 'КУПЛЕНО';
+            }
+        } else {
+            // Если не куплено — просто цена
+            card.querySelector('.price-tag').innerText = levelCosts[index];
+        }
+    });
 }
 
-.shop-card.bought .price-tag {
-    color: gray;
-    font-size: 10px;
+// Открывает модальное окно скина
+function openMarketModal(data, type = 'skin') {
+    const modal = document.getElementById('shop-modal');
+    const buyBtn = document.getElementById('modal-buy-btn');
+    if (!modal) return;
+
+    let title, desc, price, img;
+
+    if (type === 'skin') {
+        // Логика для скинов (как у тебя была)
+        const skin = coinSkinsData[data];
+        title = skin.name;
+        desc = skin.desc;
+        price = levelCosts[data];
+        img = skin.url;
+
+        // Кнопка для скинов
+        if (purchasedSkins.includes(data)) {
+            buyBtn.innerText = (data === currentCoinSkin) ? "УЖЕ ВЫБРАН" : "ВЫБРАТЬ";
+            buyBtn.disabled = (data === currentCoinSkin);
+            buyBtn.onclick = () => {
+                currentCoinSkin = data;
+                updateCoinImage();
+                closeMarketModal();
+                saveGame();
+            };
+        } else {
+            buyBtn.innerText = clickCount >= price ? "КУПИТЬ" : "МАЛО КАРТОШКИ";
+            buyBtn.disabled = clickCount < price;
+            buyBtn.onclick = () => buyAndSelectSkin(data, price);
+        }
+    }
+         else if (type === 'business') {
+        // 1. Уровень
+        let currentLvl = window.ownedBusiness[data.id] || 0;
+        price = Math.floor(data.basePrice * Math.pow(1.15, currentLvl));
+        title = data.name;
+
+        // ИСПРАВЛЕНО: берем baseProfit
+        const displayProfit = data.baseProfit || 0;
+        desc = `Приносит +${displayProfit.toLocaleString()} 🥔 в час.\nУровень: ${currentLvl}`;
+        img = data.url || 'https://raw.githubusercontent.com';
+
+        buyBtn.innerText = clickCount >= price ? "УЛУЧШИТЬ" : "МАЛО КАРТОШКИ";
+        buyBtn.disabled = clickCount < price;
+        buyBtn.onclick = () => {
+            buyBusiness(data.id);
+            closeMarketModal();
+        };
+    }
+
+
+
+    // Заполняем поля
+    document.getElementById('modal-title').innerText = title;
+    document.getElementById('modal-desc').innerText = desc;
+    // Тут мы используем (price || 0), чтобы даже если что-то пойдет не так,
+    // код не падал, а просто рисовал "0"
+    document.getElementById('modal-price').innerText = (price || 0).toLocaleString();
+
+    document.getElementById('modal-img').src = img;
+
+    modal.style.display = 'flex';
 }
 
-.market-tabs {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 20px;
-    width: 100%;
+// Функция покупки
+function buyAndSelectSkin(skinIndex, cost) {
+    if (clickCount >= cost) {
+        clickCount -= cost;
+        currentCoinSkin = skinIndex;
+
+        // Добавляем в список купленных вещей
+        if (!purchasedSkins.includes(skinIndex)) {
+            purchasedSkins.push(skinIndex);
+        }
+
+        if (typeof scoreElem !== 'undefined') scoreElem.textContent = clickCount;
+        if (typeof updateCoinImage === 'function') updateCoinImage();
+
+        closeMarketModal();
+        updateCardStatuses();
+        saveGame();
+    }
 }
 
-.tab-btn {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border: 1px solid gold;
-    padding: 10px 20px;
-    border-radius: 20px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: 0.3s;
+// === УЛУЧШЕНИЯ (BOOSTS) ===
+function generateBoostCards() {
+    const grid = document.getElementById('boost-shop-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    let cloverPrice = "MAX";
+    if (typeof cloverCosts !== 'undefined' && cloverLevel < cloverCosts.length) {
+        cloverPrice = cloverCosts[cloverLevel];
+    }
+
+    let honeyPrice = "MAX";
+    if (typeof honeyCosts !== 'undefined' && honeyLevel < honeyCosts.length) {
+        honeyPrice = honeyCosts[honeyLevel];
+    }
+    let storagePrice = "MAX";
+    if (typeof storageUpgradeCosts !== 'undefined' && storageLevel < storageUpgradeCosts.length) {
+    storagePrice = storageUpgradeCosts[storageLevel];
 }
 
-.tab-btn.active {
-    background: gold;
-    color: black;
-    box-shadow: 0 0 10px gold;
+    // ВОТ ТУТ ОШИБКА: проверь, чтобы везде стояли правильные названия
+    const boosts = [
+        { id: 'click', name: 'СИЛА КЛИКА', desc: `Урон: ${clickPower}`, price: boostClickCost, icon: '🎯', lvl: clickPower },
+        { id: 'energy', name: 'ЗАПАС ЭНЕРГИИ', desc: `Макс: ${maxEnergy}`, price: boostEnergyCost, icon: '⚡', lvl: Math.floor((maxEnergy - 100) / 50) + 1 },
+        { id: 'clover', name: 'КЛЕВЕР УДАЧИ', desc: `Шанс: ${Math.round(criticalChance * 100)}%`, price: (typeof cloverCosts !== 'undefined' ? cloverCosts[cloverLevel] : 'MAX'), icon: '🍀', lvl: cloverLevel },
+        { id: 'honey',  name: 'БОЧКА МЁДА', desc: `Реген: +${energyRegenSpeed}`, price: honeyCost , icon: '🍯', lvl: energyRegenSpeed},
+        {id: 'airdrop', name: 'СБРОС ПРОВИЗИИ', desc: `Бонус: +${airdropBaseBonus + (airdropLvl - 1) * 200} 🥔`, price: 500 * Math.pow(2, airdropLvl - 1), icon: '🚁', lvl: airdropLvl}
+    ];
+
+         boosts.forEach(boost => {
+        const card = document.createElement('div');
+        card.className = 'boost-card';
+        card.onclick = () => openBoostModal(boost);
+
+        card.innerHTML = `
+            <div class="boost-header">
+                <div class="boost-left">
+                    <div class="boost-icon-box">${boost.icon}</div>
+                </div>
+                <div class="boost-right">
+                    <div class="boost-name">${boost.name}</div>
+                    <div class="boost-desc">${boost.desc}</div>
+                </div>
+            </div>
+            <div class="boost-divider"></div>
+            <div class="boost-footer">
+                <div class="boost-lvl">Ур. ${boost.lvl}</div>
+                <div class="boost-footer-divider"></div>
+                <div class="boost-price">
+                    <span>🥔 ${boost.price.toLocaleString()}</span>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
-.boost-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
+
+function openBoostModal(boost) {
+    const modal = document.getElementById('shop-modal');
+    const buyBtn = document.getElementById('modal-buy-btn');
+    if (!modal) return;
+
+    document.getElementById('modal-title').innerText = boost.name;
+    document.getElementById('modal-desc').innerText = boost.desc;
+    document.getElementById('modal-price').innerText = boost.price;
+    document.getElementById('modal-img').src = "";
+
+    if (clickCount >= boost.price) {
+        buyBtn.disabled = false;
+        buyBtn.innerText = "УЛУЧШИТЬ";
+        buyBtn.style.opacity = "1";
+        buyBtn.onclick = () => buyBoost(boost.id);
+    } else {
+        buyBtn.disabled = true;
+        buyBtn.innerText = "МАЛО КАРТОШКИ";
+        buyBtn.style.opacity = "0.5";
+    }
+    modal.style.display = 'flex';
 }
 
-.boost-icon img {
-    width: 50px;
+function buyBoost(type) {
+    // 1. ЛОГИКА ДЛЯ КЛИКА
+    if (type === 'click' && clickCount >= boostClickCost) {
+        clickCount -= boostClickCost;
+        clickPower += 1;
+        boostClickCost = Math.round(boostClickCost * 1.5);
+    }
+    // 2. ЛОГИКА ДЛЯ ЭНЕРГИИ
+    else if (type === 'energy' && clickCount >= boostEnergyCost) {
+        clickCount -= boostEnergyCost;
+        maxEnergy += 50;
+        energy = maxEnergy; // Бонус: восполняем при покупке
+        boostEnergyCost = Math.round(boostEnergyCost * 1.5);
+    }
+    // 3. ЛОГИКА ДЛЯ КЛЕВЕРА
+    else if (type === 'clover') {
+        const currentCost = cloverCosts[cloverLevel];
+        if (cloverLevel < cloverCosts.length && clickCount >= currentCost) {
+            clickCount -= currentCost;
+            cloverLevel++;
+            criticalChance += 0.05;
+        } else { return; }
+    }
+    // 4. ЛОГИКА ДЛЯ МЁДА
+     else if (type === 'honey') {
+        if (clickCount >= honeyCost) {
+            clickCount -= honeyCost;
+            energyRegenSpeed += 1; // Повышаем уровень регена
+            honeyCost = Math.round(honeyCost * 2.5); // Цена растет
+            console.log("Мёд куплен! Реген: " + energyRegenSpeed);
+        } else {
+            alert("Маловато картошки! 🥔");
+            return;
+        }
+    }
+
+    // 5. ЛОГИКА ДЛЯ ВЕРТОЛЕТА (АИРДРОПА)
+    else if (type === 'airdrop') {
+        const cost = 500 * Math.pow(2, airdropLvl - 1);
+        if (clickCount >= cost) {
+            clickCount -= cost;
+            airdropLvl++;
+            localStorage.setItem('airdropLvl', airdropLvl);
+        } else { return; }
+    }
+    else {
+        return; // Если тип не совпал или денег мало
+    }
+
+    // ОБЩИЕ ДЕЙСТВИЯ ПОСЛЕ ПОКУПКИ
+    saveGame();
+    if (typeof updateProgress === 'function') updateProgress();
+    if (typeof scoreElem !== 'undefined') scoreElem.textContent = Math.floor(clickCount).toLocaleString('ru-RU');
+
+    closeMarketModal(); // Закрываем модалку
+    generateBoostCards(); // Перерисовываем магазин, чтобы цены обновились
 }
+
+
+
+function buyBusiness(cardId) {
+    const card = businessCards.find(c => c.id === cardId);
+    if (!card) return;
+
+    let currentLvl = (window.ownedBusiness && window.ownedBusiness[cardId]) ? window.ownedBusiness[cardId] : 0;
+    let currentPrice = Math.floor(card.basePrice * Math.pow(1.15, currentLvl));
+
+    if (clickCount >= currentPrice) {
+        clickCount -= currentPrice;
+        window.ownedBusiness[cardId] = currentLvl + 1;
+
+        // ИСПРАВЛЕНО: используем baseProfit
+        let addProfit = Number(card.baseProfit) || 0;
+        passiveIncome = (Number(passiveIncome) || 0) + addProfit;
+
+        saveGame();
+        updateProgress();
+        renderBusinessShop();
+    } else {
+        alert("Нужно больше Бульбы!");
+    }
+}
+
+
+
+
+function renderBusinessShop() {
+    const grid = document.getElementById('business-shop-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    businessCards.forEach(card => {
+        let currentLvl = (window.ownedBusiness && window.ownedBusiness[card.id]) ? window.ownedBusiness[card.id] : 0;
+        let currentPrice = Math.floor(card.basePrice * Math.pow(1.15, currentLvl));
+
+        const item = document.createElement('div');
+        item.className = 'business-card';
+        item.onclick = () => openMarketModal(card, 'business');
+        item.innerHTML = `
+    <div class="biz-header">
+        <div class="biz-left">
+            <div class="biz-icon-box">${card.icon}</div>
+        </div>
+        <div class="biz-right">
+            <div class="biz-name">${card.name}</div>
+            <div class="biz-profit-title">ПРИБЫЛЬ В ЧАС</div>
+            <div class="biz-profit-num">
+                <span>🥔 +${card.baseProfit.toLocaleString()}</span>
+            </div>
+        </div>
+    </div> <!-- ВОТ ТУТ ДОЛЖЕН ЗАКРЫТЬСЯ HEADER -->
+
+    <div class="biz-divider"></div> <!-- ПОЛОСКА СНАРУЖИ -->
+
+    <div class="biz-footer">
+        <div class="biz-lvl">Ур. ${currentLvl}</div>
+        <div class="biz-footer-divider"></div>
+        <div class="biz-price">
+            <span>🥔 ${currentPrice.toLocaleString()}</span>
+        </div>
+    </div>
+`;
+        grid.appendChild(item);
+    });
+}
+
+
+// КРЕСТИК ТЕПЕРЬ РАБОТАЕТ
+function closeMarketModal() {
+    const modal = document.getElementById('shop-modal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+

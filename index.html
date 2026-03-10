@@ -4,13 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Монета с Анимацией</title>
-    <link rel="stylesheet" href="css/main.css">
-<link rel="stylesheet" href="css/game.css">
-<link rel="stylesheet" href="css/ui-elements.css">
-<link rel="stylesheet" href="css/market.css">
-<link rel="stylesheet" href="css/levels.css">
-<link rel="stylesheet" href="css/bank.css">
-<link rel="stylesheet" href="css/hellicopter-drop.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
   <div class="header-strip">
@@ -43,13 +37,35 @@
 
     <!-- 2. ОСНОВНОЙ ЭКРАН ИГРЫ -->
     <div id="screen-farm" class="game-screen">
+     <!-- ПАНЕЛЬ КНОПОК  -->
+    <div class="action-bar">
+    <!-- 1. КАЛЕНДАРЬ (Ежедневная награда) -->
+    <div class="action-item" onclick="openDailyCalendar()">
+        <div class="action-icon">📅</div>
+        <div class="action-label">Календарь</div>
+    </div>
+
+
+        <div class="action-item" onclick="openQuestsModal()">
+    <div class="action-icon">📝</div>
+    <div class="action-label">ЗАДАНИЯ</div>
+    </div>
+
+        <div class="action-item" onclick="openMiniGame()">
+            <div class="action-icon">🎮</div>
+            <div class="action-label">ЗАТЫЧКА</div>
+        </div>
+    </div>
+
+
+
         <!-- Счёт над монетой -->
         <div class="score-wrapper">
             <img src="https://raw.githubusercontent.com/Pi1ers/BULBA_TEST/refs/heads/main/IMG%20COIN/scorebulva.png" alt="score icon">
             <div id="score">0</div>
         </div>
           <!-- МОНЕТА -->
-         <div id="coin" onclick="handlePress(event)"></div>
+         <div id="coin"></div>
 
         <!-- КОНТЕЙНЕР СТАТИСТИКИ (Энергия и Ящик) -->
        <div class="stats-container">
@@ -87,17 +103,7 @@
 </div>
 
 
-<!-- МОДАЛЬНОЕ ОКНО -->
-<div id="shop-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeMarketModal()">&times;</span>
-        <img id="modal-img" src="" alt="item">
-        <h2 id="modal-title">Название</h2>
-        <p id="modal-desc">Описание товара</p>
-        <p>Цена: <b id="modal-price">0</b></p>
-        <button id="modal-buy-btn">КУПИТЬ</button>
-    </div>
-</div>
+
    <!-- ЭКРАН РЫНКА -->
 
     <!-- ЭКРАН БАНКА -->
@@ -227,19 +233,125 @@
     <div id="level-up-modal" class="level-overlay" style="display: none;">
     <div class="level-card">
         <div class="sun-rays"></div>
-        <h1 class="level-title">НОВЫЙ УРОВЕНЬ!</h1>
-        <!-- Убедись, что эти ID ТОЧНО совпадают -->
-        <div class="level-number" id="new-lvl-num">5</div>
-        <p class="level-reward">Награда: <span id="lvl-reward-amt">+1000</span> 🥔</p>
-        <button class="level-btn" onclick="closeLevelModal()">КРУТО!</button>
+        <div class="level-card">
+        <h2 style="color: white; margin: 0; font-size: 20px;">НОВЫЙ УРОВЕНЬ</h2>
+
+        <!-- Сюда JS вставит номер уровня -->
+        <div id="new-lvl-num" class="level-number">0</div>
+
+        <!-- Сюда JS вставит сумму награды -->
+        <div id="lvl-reward-amt" class="level-reward">0</div>
+
+        <button class="level-btn" onclick="closeLevelModal()">ЗАБРАТЬ</button>
     </div>
 </div>
+
+    </div>
+  <!-- ОКНО ЕЖЕДНЕВНОГО ВХОДА -->
+  <div id="daily-modal" class="level-overlay" style="display: none;">
+    <div class="sun-rays"></div>
+    <div class="calendar-card">
+        <div class="calendar-header">
+            <h2 id="calendar-month-name">МЕСЯЦ</h2>
+            <!-- КРЕСТИК ДЛЯ ЗАКРЫТИЯ -->
+            <button class="close-calendar" onclick="closeDailyModal()">✕</button>
+        </div>
+        <!-- СЮДА JS БУДЕТ РИСОВАТЬ СЕТКУ -->
+        <div id="calendar-grid" class="calendar-grid"></div>
+        <div class="calendar-footer">
+            <p>Заходи каждый день за наградой! 🥔</p>
+        </div>
+    </div>
+</div>
+<!-- МОДАЛКА ЗАДАНИЙ (КОПИЯ СТИЛЯ КАЛЕНДАРЯ) -->
+<div id="daily-quests-modal" class="level-overlay" style="display: none;">
+    <div class="sun-rays"></div>
+    <div class="calendar-card">
+        <div class="calendar-header">
+            <h2 style="color: gold;">ЗАДАНИЯ ДНЯ</h2>
+            <!-- Кнопка закрытия для заданий -->
+            <button class="close-calendar" onclick="closeQuestsModal()">✕</button>
+        </div>
+
+        <!-- СЮДА JS БУДЕТ РИСОВАТЬ СПИСОК ЗАДАНИЙ -->
+        <div id="quests-list" class="quests-container"></div>
+
+        <div class="calendar-footer">
+            <p>Выполняй и забирай бонусы! 🥔</p>
+        </div>
+    </div>
+</div>
+
+<!-- ЕДИНАЯ УНИВЕРСАЛЬНАЯ МОДАЛКА -->
+<div id="u-modal" class="level-overlay" style="display: none;">
+    <div class="sun-rays" style="pointer-events: none;"></div>
+    <div class="calendar-card" style="pointer-events: auto;">
+        <div class="calendar-header">
+            <h2 id="u-modal-title" style="color: gold; text-transform: uppercase;">НАЗВАНИЕ</h2>
+            <button class="close-calendar" onclick="closeUModal()">✕</button>
+        </div>
+        <div class="modal-content" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
+
+            <div id="u-modal-icon-container" style="margin: 15px 0;">
+                <div id="u-modal-icon" style="font-size: 80px; filter: drop-shadow(0 0 10px rgba(255,215,0,0.3));">🥔</div>
+            </div>
+
+            <p id="u-modal-desc" style="color: #ccc; font-size: 14px; padding: 0 20px; margin-bottom: 15px;"></p>
+
+            <!-- СЕКЦИЯ СТАТИСТИКИ -->
+            <div id="u-modal-stats" style="display: none; justify-content: space-around; width: 100%; background: rgba(255, 255, 255, 0.05); padding: 12px 0; border-radius: 15px; margin-bottom: 20px;">
+                <div class="modal-stat">
+                    <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block;">Доход</span>
+                    <b id="u-modal-profit" style="color: #2ecc71; font-size: 18px;">+0</b>
+                </div>
+                <div class="modal-stat">
+                    <span style="font-size: 10px; color: #888; text-transform: uppercase; display: block;">Уровень</span>
+                    <b id="u-modal-lvl" style="font-size: 18px; color: #fff;">0</b>
+                </div>
+            </div>
+
+
+
+
+            <!-- УНИВЕРСАЛЬНАЯ КНОПКА -->
+            <button id="u-modal-buy-btn" class="buy-button-large" style="width: 100%; padding: 16px; border-radius: 18px; border: none; background: linear-gradient(180deg, #f39c12, #d35400); color: white; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(211, 84, 0, 0.4); position: relative; z-index: 10001;">
+                <span id="u-modal-btn-text">КУПИТЬ ЗА</span>
+                <span id="u-modal-price">0</span> 🥔
+            </button>
+        </div>
+    </div>
+</div>
+
+  <div id="skin-modal" class="modal-overlay" style="display:none;">
+            <div class="calendar-card">
+                 <div id="skin-modal-icon" style="font-size: 64px; margin-bottom: 10px;"></div>
+                <h2 id="skin-modal-title">Название скина</h2>
+                <p id="skin-modal-desc">Описание скина</p>
+
+            <div class="u-modal-footer">
+            <div class="u-modal-price-box">
+                <span id="skin-modal-price">0</span> 🥔
+            </div>
+            <button id="skin-modal-buy-btn" class="u-modal-btn">ВЫБРАТЬ / КУПИТЬ</button>
+            </div>
+                <button onclick="closeSkinModal()" class="close-btn">✖</button>
+            </div>
+        </div>
+
+
+
+
+
     <!-- Сначала данные -->
     <script src="js/constants.js"></script>
     <script src="js/business_data.js"></script>
+    <script src="js/achievements-data.js"></script>
     <script src="js/achievements.js"></script>
+    <script src="js/quests.js"></script>
+
 
     <!-- логика -->
+    <script src="js/bar-menu.js"></script>
     <script src="js/game.js"></script>
      <script src="js/bank.js"></script>
     <script src="js/navigation.js"></script>

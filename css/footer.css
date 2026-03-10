@@ -1,0 +1,63 @@
+
+/* ФУТЕР И КНОПКИ */
+.bottom-buttons {
+    background: rgba(20, 20, 20, 0.95); /* Чуть темнее для контраста */
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+    /* Твои закругления */
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+
+
+    /* RGB-свечение (анимация ниже) */
+    animation: footer-rgb-glow 6s linear infinite;
+    z-index: 1000;
+}
+
+/* Анимация перелива тени */
+@keyframes footer-rgb-glow {
+    0% { box-shadow: 0 -5px 15px rgba(255, 0, 0, 0.4); }
+    33% { box-shadow: 0 -5px 15px rgba(0, 255, 0, 0.4); }
+    66% { box-shadow: 0 -5px 15px rgba(0, 0, 255, 0.4); }
+    100% { box-shadow: 0 -5px 15px rgba(255, 0, 0, 0.4); }
+}
+.custom-btn {
+    background: none;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.custom-btn:active { transform: scale(0.9); }
+.btn-icon { width: 30px; height: 30px; margin-bottom: 5px; }
+
+
+/* ОБЩИЙ СТИЛЬ ЭКРАНОВ */
+.game-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Монета будет по центру экрана */
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 80px; /* Место для шапки */
+    padding-bottom: 100px; /* Место для футера */
+    overflow-y: auto;
+}
+
+
+/* МОБИЛЬНАЯ АДАПТАЦИЯ */
+@media (max-width: 600px) {
+    .bottom-buttons { padding: 10px 0 25px 0; justify-content: space-around; }
+    .btn-icon { width: 35px !important; height: 35px !important; }
+    .custom-btn span { font-size: 11px !important; }
+    #coin { width: 200px !important; height: 200px !important; }
+}

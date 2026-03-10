@@ -1,0 +1,109 @@
+.levels-list {
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Чуть увеличил отступ для воздуха */
+}
+
+.level-item {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Статус: Пройдено */
+.level-item.reached {
+    border-color: rgba(46, 204, 113, 0.4);
+    background: rgba(46, 204, 113, 0.05);
+}
+
+/* Статус: Текущий (Акцент) */
+.level-item.current {
+    border-color: rgba(255, 215, 0, 0.5);
+    background: rgba(255, 215, 0, 0.07);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
+    z-index: 2;
+}
+
+/* Квадрат с номером уровня */
+.lvl-num {
+    font-size: 20px;
+    font-weight: 800;
+    width: 46px;
+    height: 46px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    color: #555;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.level-item.current .lvl-num {
+    background: linear-gradient(180deg, #ffcf33, #ff9d00);
+    color: #000;
+    border: none;
+}
+
+.level-item.reached .lvl-num {
+    color: #2ecc71;
+    border-color: rgba(46, 204, 113, 0.5);
+}
+
+.lvl-info { flex: 1; }
+
+.lvl-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    color: #fff;
+}
+
+.lvl-info p {
+    margin: 0;
+    font-size: 12px;
+    color: #888;
+}
+
+/* Полоска прогресса */
+.lvl-mini-progress-bg {
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.lvl-mini-progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: #444; /* Цвет по умолчанию */
+    transition: width 0.5s ease-out;
+}
+
+/* Цвета полоски в зависимости от статуса */
+.level-item.reached .lvl-mini-progress-fill {
+    background: #2ecc71;
+}
+
+.level-item.current .lvl-mini-progress-fill {
+    background: linear-gradient(90deg, #ffcf33, #ff9d00);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+}
+
+.lvl-status {
+    font-size: 20px;
+    margin-left: 12px;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+}

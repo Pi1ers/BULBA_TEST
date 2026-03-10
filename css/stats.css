@@ -1,0 +1,68 @@
+#energy-val {
+
+    font-size: 1.0em;
+    font-weight: bold;
+    text-shadow: 0 0 8px #00ffcc;
+    color: #fff;
+    white-space: nowrap;
+}
+
+#energy-capsule {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 6px 14px;
+    border-radius: 50px;
+    border: 1px solid rgba(0, 255, 204, 0.3);
+    display: flex;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.2);
+}
+
+.stats-container {
+    position: fixed; /* Теперь весь ряд фиксирован снизу */
+    bottom: 140px;   /* Твоя привычная высота */
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between; /* Энергия — влево, Ракета — вправо */
+    align-items: center;
+    padding: 0 20px; /* Отступы от краев экрана */
+    box-sizing: border-box;
+    pointer-events: none; /* Пропускаем клики сквозь пустую зону */
+    z-index: 1000;
+}
+
+#energy-capsule, #premium-boost-btn {
+    pointer-events: auto; /* Возвращаем кликабельность кнопкам */
+}
+
+#premium-boost-btn {
+    pointer-events: auto;
+    background: linear-gradient(135deg, #0088cc, #00aaff); /* Цвета Telegram */
+    padding: 6px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0, 136, 204, 0.5);
+    transition: all 0.3s ease;
+    animation: pulse-blue 2s infinite;
+}
+
+#boost-text {
+    font-size: 11px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+@keyframes pulse-blue {
+    0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 136, 204, 0.5); }
+    50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 170, 255, 0.8); }
+    100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 136, 204, 0.5); }
+}
+
+#premium-boost-btn:active {
+    transform: scale(0.9);
+}

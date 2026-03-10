@@ -1,0 +1,24 @@
+/* css/style.css */
+
+/* 1. Сначала база и системные вещи */
+@import "main.css";
+@import "game.css";
+@import "ui-elements.css";
+
+/* 2. Основные блоки интерфейса */
+@import "header.css";
+@import "bar-menu.css";
+@import "footer.css";
+
+/* 3. Игровые элементы */
+@import "coin.css";
+@import "stats.css";
+@import "hellicopter-drop.css";
+
+/* 4. Конкретные экраны и окна */
+@import "screens.css";
+@import "market.css";
+@import "levels.css";
+@import "bank.css";
+@import "achievements.css";
+

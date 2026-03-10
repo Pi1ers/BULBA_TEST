@@ -1,0 +1,51 @@
+* {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    box-sizing: border-box;
+}
+/* БАЗОВЫЕ СТИЛИ */
+
+
+body {
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* СТРУКТУРА ЭКРАНОВ */
+.game-screen {
+    display: none; /* Скрыто по умолчанию */
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+#screen-farm {
+    display: flex;
+    flex-direction: column;
+    /* Уменьшаем отступ сверху, чтобы всё подпрыгнуло выше */
+    justify-content: flex-start !important;
+    padding-top: 100px; /* Регулируй это число (чем меньше, тем выше монета) */
+}
+
+.game-screen:not(#screen-farm) {
+    justify-content: flex-start !important;
+    padding-top: 1px !important; /* Место под шапку */
+    background: #1a1a1a; /* Свой фон */
+}
+
+
+

@@ -1,0 +1,37 @@
+.coin-container {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.score-container {
+    margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+    #coin { width: 200px !important; height: 200px !important; }
+}
+
+.particle-potato {
+    position: fixed;
+    pointer-events: none; /* Чтобы не мешали кликать дальше */
+    z-index: 10000;
+    font-size: 24px;
+    user-select: none;
+    animation: potato-fly 0.8s ease-out forwards;
+}
+
+@keyframes potato-fly {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        /* Разлетаются в случайные стороны (зададим через JS) */
+        transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--tr));
+        opacity: 0;
+    }
+}
+

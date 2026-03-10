@@ -1,0 +1,94 @@
+#achievements-list {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 12px;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.achievement-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.03); /* Glassmorphism */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    aspect-ratio: 1 / 1.2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ГРАДИЕНТНЫЕ РАМКИ ДЛЯ УРОВНЕЙ */
+.achievement-card.tier-1 { border-color: rgba(205, 127, 50, 0.5); } /* Бронза */
+.achievement-card.tier-2 { border-color: rgba(192, 192, 192, 0.5); } /* Серебро */
+.achievement-card.tier-3 { border-color: rgba(255, 215, 0, 0.6); box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.1); } /* Золото */
+.achievement-card.tier-6 { border-color: #ff00ff; animation: neon-pulse 2s infinite; } /* Легенда */
+
+/* КРУГОВОЙ ПРОГРЕСС-БАР */
+.ach-progress-container {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ach-svg-ring {
+    position: absolute;
+    transform: rotate(-90deg);
+}
+
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.05); stroke-width: 3; }
+.ring-fill {
+    fill: none;
+    stroke: gold; /* Цвет будет меняться в зависимости от тира */
+    stroke-width: 3;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.8s ease;
+}
+
+.ach-icon { font-size: 24px; z-index: 2; }
+
+.ach-name {
+    font-size: 8px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 800;
+    text-align: center;
+    padding: 0 5px;
+    opacity: 0.8;
+}
+
+.ach-status-badge {
+    position: absolute;
+    top: 8px; right: 8px;
+    font-size: 7px;
+    background: rgba(255,255,255,0.1);
+    padding: 2px 5px;
+    border-radius: 6px;
+    color: gold;
+}
+
+@keyframes neon-pulse {
+    0% { box-shadow: 0 0 5px #ff00ff; }
+    50% { box-shadow: 0 0 15px #ff00ff; }
+    100% { box-shadow: 0 0 5px #ff00ff; }
+}
+
+.ach-level-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: gold;
+    color: black;
+    font-size: 7px;
+    padding: 2px 5px;
+    border-radius: 10px;
+    font-weight: 900;
+}

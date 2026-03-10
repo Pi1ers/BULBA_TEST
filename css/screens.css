@@ -1,0 +1,30 @@
+.screen-header {
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Увеличиваем отступ сверху, чтобы выйти из-под шапки профиля */
+    margin: 0 auto 15px auto !important;
+    position: relative;
+    z-index: 1100; /* Выше, чем .header-strip (у которой 1000) */
+}
+
+.close-screen {
+    font-size: 32px;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    line-height: 1;
+    padding: 10px; /* Увеличиваем область клика */
+    transition: transform 0.2s, color 0.2s;
+    /* Чтобы палец точно попадал */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-screen:hover { 
+    color: gold; 
+    transform: scale(1.1); 
+}
